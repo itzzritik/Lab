@@ -34,13 +34,15 @@ export const DARK_THEMES = ["dark", "synthwave", "halloween", "forest", "black",
 
 export const ALL_THEMES = [...LIGHT_THEMES, ...DARK_THEMES] as const;
 
+export const FEATURED_THEMES = ["light", "dark", "nord", "dracula", "sunset"] as const;
+
 /* ── Animation speed ─────────────────────────────────── */
 
 export const ANIMATION_SPEEDS = [
-	{ id: "instant", label: "Instant", description: "No animations" },
-	{ id: "swift", label: "Swift", description: "Quick & snappy" },
-	{ id: "smooth", label: "Smooth", description: "Balanced default" },
-	{ id: "gentle", label: "Gentle", description: "Slow & elegant" },
+	{ id: "instant", label: "Instant", description: "No animations", icon: "f0e7" },
+	{ id: "swift", label: "Swift", description: "Quick & snappy", icon: "f135" },
+	{ id: "smooth", label: "Smooth", description: "Balanced default", icon: "f4d8" },
+	{ id: "gentle", label: "Gentle", description: "Slow & elegant", icon: "f06c" },
 ] as const;
 
 export type AnimationSpeed = (typeof ANIMATION_SPEEDS)[number]["id"];

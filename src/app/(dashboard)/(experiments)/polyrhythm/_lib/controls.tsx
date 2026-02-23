@@ -1,6 +1,7 @@
 "use client";
 
 import { Icon } from "gliff";
+import { cn } from "#utils/helper";
 import type { Instrument } from "./types";
 import { INSTRUMENTS } from "./types";
 
@@ -13,8 +14,8 @@ type Props = {
 
 export function Controls({ soundEnabled, instrument, onToggleSound, onInstrumentChange }: Props) {
 	return (
-		<div className="absolute top-4 right-4 z-10 flex items-center gap-2">
-			<button type="button" onClick={onToggleSound} className="btn btn-sm btn-circle btn-neutral dur-fast transition-all">
+		<div className="absolute right-4 top-4 z-10 flex items-center gap-2">
+			<button type="button" onClick={onToggleSound} className="btn btn-circle btn-neutral btn-sm transition-all dur-fast">
 				<Icon code={soundEnabled ? "f028" : "f6a9"} type="solid" className="ico-3" />
 			</button>
 
@@ -24,12 +25,12 @@ export function Controls({ soundEnabled, instrument, onToggleSound, onInstrument
 						key={inst}
 						type="button"
 						onClick={() => onInstrumentChange(inst)}
-						className={`px-3 py-1.5 font-medium text-xs capitalize transition-all dur-fast${
+						className={cn(
+							"px-3 py-1.5 text-xs font-medium capitalize transition-all dur-fast",
 							inst === instrument
 								? "bg-neutral-content/15 text-neutral-content"
-								: "text-neutral-content/40 hover:bg-neutral-content/5 hover:text-neutral-content/70"
-						}
-						`}>
+								: "text-neutral-content/40 hover:bg-neutral-content/5 hover:text-neutral-content/70",
+						)}>
 						{inst}
 					</button>
 				))}

@@ -6,9 +6,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 	const experiments = getExperiments();
 
 	return (
-		<div className="flex h-dvh overflow-hidden bg-base-200">
-			<Sidebar experiments={experiments} />
-			<main className="relative min-w-0 flex-1 overflow-y-auto">{children}</main>
+		<div className="flex h-dvh flex-col overflow-hidden bg-base-200">
+			{/* Dashboard accent bar */}
+			<div className="h-1 shrink-0 bg-gradient-to-r from-primary via-secondary to-accent" />
+
+			<div className="flex min-h-0 flex-1">
+				<Sidebar experiments={experiments} />
+				<main className="relative min-w-0 flex-1 overflow-y-auto">{children}</main>
+			</div>
 		</div>
 	);
 }
