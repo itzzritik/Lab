@@ -34,7 +34,7 @@ export const DARK_THEMES = ["dark", "synthwave", "halloween", "forest", "black",
 
 export const ALL_THEMES = [...LIGHT_THEMES, ...DARK_THEMES] as const;
 
-export const FEATURED_THEMES = ["light", "dark", "nord", "dracula", "sunset"] as const;
+export const FEATURED_THEMES = ["light", "dark", "nord", "black", "sunset"] as const;
 
 /* ── Animation speed ─────────────────────────────────── */
 
@@ -88,7 +88,7 @@ function AnimationProvider({ children }: { children: ReactNode }) {
 
 export function Providers({ children }: { children: ReactNode }) {
 	return (
-		<ThemeProvider attribute="data-theme" defaultTheme="light" themes={[...ALL_THEMES]}>
+		<ThemeProvider attribute="data-theme" defaultTheme="black" themes={[...ALL_THEMES]}>
 			<AnimationProvider>{children}</AnimationProvider>
 		</ThemeProvider>
 	);
