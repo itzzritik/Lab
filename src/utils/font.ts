@@ -1,4 +1,4 @@
-import { Days_One, Jost, Space_Mono } from "next/font/google";
+import { Days_One, Outfit, Space_Mono } from "next/font/google";
 
 export const displayFamily = Days_One({
 	subsets: ["latin"],
@@ -8,7 +8,7 @@ export const displayFamily = Days_One({
 	preload: true,
 });
 
-export const textFamily = Jost({
+export const textFamily = Outfit({
 	subsets: ["latin"],
 	variable: "--text-family",
 	display: "swap",
