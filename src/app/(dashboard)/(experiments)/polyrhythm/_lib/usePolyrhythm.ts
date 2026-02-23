@@ -1,48 +1,51 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { Arc, Instrument } from "./types";
+import type { Instrument } from "./types";
 
-const ARC_COUNT = 21;
+const N = 21;
 const DURATION = 900;
 const MAX_CYCLES = 100;
-const ARC_COLOR = "#A6C48A";
 
-const FREQ_SCALES: Record<Instrument, (i: number) => number> = {
-	default: (i) => 220 * 2 ** ((i * 2) / 12),
-	vibraphone: (i) => 262 * 2 ** ((i * 1.5) / 12),
+const FREQ: Record<Instrument, (i: number) => number> = {
+	sine: (i) => 220 * 2 ** ((i * 2) / 12),
+	bell: (i) => 262 * 2 ** ((i * 1.5) / 12),
 	wave: (i) => 174 * 2 ** ((i * 2.5) / 12),
 };
 
-const calcVelocity = (i: number) => ((MAX_CYCLES - i) * 2 * Math.PI) / DURATION;
-const calcNextImpact = (t: number, v: number) => t + (Math.PI / v) * 1000;
+type Ripple = { x: number; y: number; t: number; idx: number };
 
-export function usePolyrhythm(canvasRef: React.RefObject<HTMLCanvasElement | null>, opts: { soundEnabled: boolean; instrument: Instrument }) {
+const vel = (i: number) => ((MAX_CYCLES - i) * 2 * Math.PI) / DURATION;
+const arcHue = (i: number) => 30 + (i / (N - 1)) * 250;
+const hsla = (h: number, s: number, l: number, a: number) => `hsla(${h},${s}%,${l}%,${a})`;
+
+export function usePolyrhythm(
+	ref: React.RefObject<HTMLCanvasElement | null>,
+	opts: { soundEnabled: boolean; instrument: Instrument },
+) {
 	const optsRef = useRef(opts);
 	optsRef.current = opts;
-
 	const audioRef = useRef<AudioContext | null>(null);
 
 	useEffect(() => {
-		const canvas = canvasRef.current;
+		const canvas = ref.current;
 		const ctx = canvas?.getContext("2d");
 		if (!canvas || !ctx) return;
 
 		const t0 = Date.now();
-		const arcs: Arc[] = Array.from({ length: ARC_COUNT }, (_, i) => ({
-			velocity: calcVelocity(i),
-			lastImpactTime: 0,
-			nextImpactTime: calcNextImpact(t0, calcVelocity(i)),
-		}));
+		const arcs = Array.from({ length: N }, (_, i) => {
+			const v = vel(i);
+			return { v, last: 0, next: t0 + (Math.PI / v) * 1000 };
+		});
+		const ripples: Ripple[] = [];
 
-		const playTone = (i: number) => {
+		const tone = (i: number) => {
 			if (!optsRef.current.soundEnabled || document.hidden) return;
 			const ac = (audioRef.current ??= new AudioContext());
-			const freq = FREQ_SCALES[optsRef.current.instrument](i);
 			const osc = ac.createOscillator();
 			const gain = ac.createGain();
 			osc.type = "sine";
-			osc.frequency.value = freq;
+			osc.frequency.value = FREQ[optsRef.current.instrument](i);
 			gain.gain.setValueAtTime(0.06, ac.currentTime);
 			gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.6);
 			osc.connect(gain).connect(ac.destination);
@@ -61,55 +64,94 @@ export function usePolyrhythm(canvasRef: React.RefObject<HTMLCanvasElement | nul
 			const w = canvas.clientWidth;
 			const h = canvas.clientHeight;
 			const now = Date.now();
-			const elapsed = (now - t0) / 1000;
-			const len = Math.min(w, h) * 0.9;
+			const sec = (now - t0) / 1000;
+			const sz = Math.min(w, h) * 0.9;
 			const cx = w / 2;
 			const cy = h / 2;
-			const initR = len * 0.05;
-			const dotR = len * 0.006;
-			const spacing = (len - initR - len * 0.03) / 2 / ARC_COUNT;
+			const r0 = sz * 0.05;
+			const dotR = sz * 0.006;
+			const sp = (sz / 2 - r0 - sz * 0.02) / N;
+
+			// ── Background ──
+			ctx.fillStyle = "#08080f";
+			ctx.fillRect(0, 0, w, h);
+
+			const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, sz * 0.55);
+			glow.addColorStop(0, "rgba(40,20,60,0.25)");
+			glow.addColorStop(0.5, "rgba(20,12,35,0.12)");
+			glow.addColorStop(1, "transparent");
+			ctx.fillStyle = glow;
+			ctx.fillRect(0, 0, w, h);
 
 			ctx.lineCap = "round";
 
-			for (let i = 0; i < ARC_COUNT; i++) {
+			// ── Arcs ──
+			for (let i = 0; i < N; i++) {
 				const arc = arcs[i];
 				if (!arc) continue;
-				const r = initR + spacing * i;
-				const fade = Math.min((now - arc.lastImpactTime) / 1000, 1);
-				const gap = (dotR * 5) / 3 / r;
+				const r = r0 + sp * i;
+				const hue = arcHue(i);
+				const fade = Math.min((now - arc.last) / 800, 1);
+				const gap = (dotR * 4) / r;
 
-				// Arc semicircles
-				ctx.globalAlpha = 0.65 - 0.5 * fade;
-				ctx.lineWidth = len * 0.002;
-				ctx.strokeStyle = ARC_COLOR;
-				ctx.beginPath();
-				ctx.arc(cx, cy, r, Math.PI + gap, 2 * Math.PI - gap);
-				ctx.stroke();
-				ctx.beginPath();
-				ctx.arc(cx, cy, r, gap, Math.PI - gap);
-				ctx.stroke();
-
-				// Impact dots
-				ctx.globalAlpha = 0.85 - 0.7 * fade;
-				ctx.fillStyle = ARC_COLOR;
-				for (const a of [Math.PI, 0]) {
+				// Semicircles
+				ctx.lineWidth = sz * 0.0015;
+				ctx.strokeStyle = hsla(hue, 70, 65, 0.1 + 0.35 * (1 - fade));
+				for (const off of [Math.PI, 0]) {
 					ctx.beginPath();
-					ctx.arc(cx + r * Math.cos(a), cy + r * Math.sin(a), dotR * 0.75, 0, 2 * Math.PI);
+					ctx.arc(cx, cy, r, off + gap, off + Math.PI - gap);
+					ctx.stroke();
+				}
+
+				// Endpoints
+				const endAlpha = 0.2 + 0.6 * (1 - fade);
+				const endR = dotR * (0.5 + 0.7 * (1 - fade));
+				ctx.fillStyle = hsla(hue, 70, 70, endAlpha);
+				for (const a of [0, Math.PI]) {
+					ctx.beginPath();
+					ctx.arc(cx + r * Math.cos(a), cy + r * Math.sin(a), endR, 0, 2 * Math.PI);
 					ctx.fill();
 				}
 
-				// Moving dot + sound trigger
-				ctx.globalAlpha = 1;
-				if (now >= arc.nextImpactTime) {
-					playTone(i);
-					arc.lastImpactTime = arc.nextImpactTime;
-					arc.nextImpactTime = calcNextImpact(arc.nextImpactTime, arc.velocity);
+				// Angle + impact check
+				const angle = (Math.PI + sec * arc.v) % (2 * Math.PI);
+				if (now >= arc.next) {
+					tone(i);
+					arc.last = arc.next;
+					arc.next += (Math.PI / arc.v) * 1000;
+					const side = angle < Math.PI / 2 || angle > (3 * Math.PI) / 2 ? 0 : Math.PI;
+					ripples.push({ x: cx + r * Math.cos(side), y: cy + r * Math.sin(side), t: now, idx: i });
 				}
 
-				const angle = (Math.PI + Math.max(0, elapsed) * arc.velocity) % (2 * Math.PI);
+				// Moving dot with glow
+				ctx.shadowBlur = 10;
+				ctx.shadowColor = hsla(hue, 80, 65, 0.5);
+				ctx.fillStyle = hsla(hue, 75, 72, 1);
 				ctx.beginPath();
 				ctx.arc(cx + r * Math.cos(angle), cy + r * Math.sin(angle), dotR, 0, 2 * Math.PI);
 				ctx.fill();
+				ctx.shadowBlur = 0;
+			}
+
+			// ── Ripples ──
+			for (let j = ripples.length - 1; j >= 0; j--) {
+				const rip = ripples[j];
+				if (!rip) continue;
+				const age = (now - rip.t) / 600;
+				if (age > 1) {
+					ripples.splice(j, 1);
+					continue;
+				}
+				const hue = arcHue(rip.idx);
+				const ease = 1 - age;
+				ctx.strokeStyle = hsla(hue, 70, 70, 0.5 * ease);
+				ctx.lineWidth = sz * 0.002 * ease;
+				ctx.shadowBlur = 12 * ease;
+				ctx.shadowColor = hsla(hue, 80, 65, 0.3);
+				ctx.beginPath();
+				ctx.arc(rip.x, rip.y, dotR + age * sz * 0.018, 0, 2 * Math.PI);
+				ctx.stroke();
+				ctx.shadowBlur = 0;
 			}
 
 			raf = requestAnimationFrame(draw);
@@ -117,11 +159,7 @@ export function usePolyrhythm(canvasRef: React.RefObject<HTMLCanvasElement | nul
 
 		raf = requestAnimationFrame(draw);
 		return () => cancelAnimationFrame(raf);
-	}, [canvasRef]);
+	}, [ref]);
 
-	useEffect(() => {
-		return () => {
-			audioRef.current?.close();
-		};
-	}, []);
+	useEffect(() => () => void audioRef.current?.close(), []);
 }

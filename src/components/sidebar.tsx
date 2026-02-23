@@ -17,7 +17,7 @@ export function Sidebar({ experiments }: { experiments: Experiment[] }) {
 				{/* Header */}
 				<div className="flex h-14 cursor-pointer items-center px-2" onClick={() => setCollapsed((v) => !v)}>
 					<div className="flex w-10 shrink-0 items-center justify-center">
-						<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-secondary text-primary-content">
+						<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-content">
 							<Icon code="f0c3" type="solid" className="ico-[14]" />
 						</div>
 					</div>

@@ -1,9 +1,3 @@
-export type Instrument = "default" | "vibraphone" | "wave";
+export type Instrument = "sine" | "bell" | "wave";
 
-export const INSTRUMENTS: Instrument[] = ["default", "vibraphone", "wave"];
-
-export type Arc = {
-	velocity: number;
-	lastImpactTime: number;
-	nextImpactTime: number;
-};
+export const INSTRUMENTS: Instrument[] = ["sine", "bell", "wave"];

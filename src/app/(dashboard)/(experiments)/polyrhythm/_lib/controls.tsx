@@ -14,27 +14,31 @@ type Props = {
 
 export function Controls({ soundEnabled, instrument, onToggleSound, onInstrumentChange }: Props) {
 	return (
-		<div className="absolute right-4 top-4 z-10 flex items-center gap-2">
-			<button type="button" onClick={onToggleSound} className="btn btn-circle btn-neutral btn-sm transition-all dur-fast">
+		<div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1 rounded-full border border-white/8 bg-white/4 px-1.5 py-1.5 backdrop-blur-2xl">
+			<button
+				type="button"
+				onClick={onToggleSound}
+				className={cn(
+					"flex size-8 items-center justify-center rounded-full transition-all dur-fast",
+					soundEnabled ? "bg-white/10 text-white" : "text-white/40 hover:text-white/70",
+				)}>
 				<Icon code={soundEnabled ? "f028" : "f6a9"} type="solid" className="ico-3" />
 			</button>
 
-			<div className="flex overflow-hidden rounded-full border border-neutral-content/10 bg-neutral">
-				{INSTRUMENTS.map((inst) => (
-					<button
-						key={inst}
-						type="button"
-						onClick={() => onInstrumentChange(inst)}
-						className={cn(
-							"px-3 py-1.5 text-xs font-medium capitalize transition-all dur-fast",
-							inst === instrument
-								? "bg-neutral-content/15 text-neutral-content"
-								: "text-neutral-content/40 hover:bg-neutral-content/5 hover:text-neutral-content/70",
-						)}>
-						{inst}
-					</button>
-				))}
-			</div>
+			<div className="mx-1 h-4 w-px bg-white/8" />
+
+			{INSTRUMENTS.map((inst) => (
+				<button
+					key={inst}
+					type="button"
+					onClick={() => onInstrumentChange(inst)}
+					className={cn(
+						"rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-all dur-fast",
+						inst === instrument ? "bg-white/10 text-white" : "text-white/30 hover:text-white/60",
+					)}>
+					{inst}
+				</button>
+			))}
 		</div>
 	);
 }
