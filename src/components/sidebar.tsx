@@ -75,11 +75,8 @@ function NavItem({ href, icon, label, active, collapsed }: { href: string; icon:
 			href={href}
 			className={cn(
 				"flex items-center rounded-lg py-2 transition-all dur-fast",
-				active
-					? "bg-primary text-primary-content shadow-sm shadow-primary/20"
-					: "text-base-content/50 hover:bg-base-content/[0.04] hover:text-base-content/85",
-			)}
-		>
+				active ? "bg-primary text-primary-content shadow-sm shadow-primary/20" : "text-base-content/50 hover:bg-base-content/[0.04] hover:text-base-content/85",
+			)}>
 			<div className="flex w-10 shrink-0 items-center justify-center">
 				<Icon code={icon} type="solid" className="ico-[15]" />
 			</div>
@@ -87,8 +84,7 @@ function NavItem({ href, icon, label, active, collapsed }: { href: string; icon:
 				className={cn(
 					"overflow-hidden whitespace-nowrap text-[0.8rem] font-medium transition-all dur",
 					collapsed ? "max-w-0 opacity-0" : "max-w-48 opacity-100",
-				)}
-			>
+				)}>
 				{label}
 			</span>
 		</Link>

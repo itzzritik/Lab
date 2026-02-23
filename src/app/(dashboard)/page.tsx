@@ -7,7 +7,7 @@ export default function HomePage() {
 	const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
 
 	return (
-		<div className="mx-auto max-w-5xl p-8">
+		<div className="p-8">
 			{/* Header */}
 			<div className="mb-10 animate-fade-up pt-2">
 				<p className="mb-1 text-sm text-base-content/60">{today}</p>

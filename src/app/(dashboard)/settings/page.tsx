@@ -14,29 +14,20 @@ const TABS: { id: ThemeTab; label: string }[] = [
 	{ id: "dark", label: "Dark" },
 ];
 
-const DEMO_DURATIONS: Record<AnimationSpeed, string> = {
-	instant: "0s",
-	swift: "0.5s",
-	smooth: "1s",
-	gentle: "2s",
-};
-
 export default function SettingsPage() {
 	const { theme, setTheme } = useTheme();
 	const { speed, setSpeed } = useAnimation();
 	const [mounted, setMounted] = useState(false);
 	const [themeTab, setThemeTab] = useState<ThemeTab>("all");
-	const [previewKey, setPreviewKey] = useState(0);
 
 	useEffect(() => setMounted(true), []);
 
-	const replay = () => setPreviewKey((k) => k + 1);
-
 	if (!mounted) {
 		return (
-			<div className="mx-auto max-w-4xl p-8">
-				<div className="mb-8 h-10 w-48 animate-pulse rounded-lg bg-base-300" />
-				<div className="h-64 animate-pulse rounded-2xl bg-base-300" />
+			<div className="p-8">
+				<div className="mb-10 h-8 w-48 animate-pulse rounded-lg bg-base-300" />
+				<div className="mb-8 h-4 w-32 animate-pulse rounded bg-base-300" />
+				<div className="h-48 animate-pulse rounded-xl bg-base-300" />
 			</div>
 		);
 	}
@@ -44,24 +35,17 @@ export default function SettingsPage() {
 	const filteredThemes = themeTab === "light" ? LIGHT_THEMES : themeTab === "dark" ? DARK_THEMES : ALL_THEMES;
 
 	return (
-		<div className="mx-auto max-w-4xl p-8">
-			<h1 className="mb-8 animate-fade-up font-display text-3xl font-bold tracking-tight">Settings</h1>
+		<div className="p-8">
+			<h1 className="mb-10 animate-fade-up font-display text-3xl font-bold tracking-tight">Settings</h1>
 
 			{/* ── Theme ─────────────────────────────────────── */}
-			<section className="mb-6 animate-fade-up rounded-2xl border border-base-content/15 bg-base-100 p-6">
-				<div className="mb-5 flex items-center justify-between">
-					<div className="flex items-center gap-3">
-						<div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-							<Icon code="f53f" type="solid" className="ico-4 text-primary" />
-						</div>
-						<div>
-							<h2 className="font-semibold text-base-content">Theme</h2>
-							<p className="text-sm text-base-content/70">Personalize your interface</p>
-						</div>
+			<section className="mb-6 animate-fade-up overflow-hidden rounded-2xl border border-base-content/8 bg-base-100">
+				<div className="flex items-center justify-between border-b border-base-content/8 px-6 py-4">
+					<div>
+						<h2 className="text-sm font-semibold text-base-content">Theme</h2>
+						<p className="text-xs text-base-content/50">Personalize your interface</p>
 					</div>
-
-					{/* Tabs */}
-					<div className="flex gap-1 rounded-lg bg-base-200 p-1">
+					<div className="flex gap-1 rounded-lg bg-base-content/5 p-1">
 						{TABS.map((tab) => (
 							<button
 								key={tab.id}
@@ -69,7 +53,7 @@ export default function SettingsPage() {
 								onClick={() => setThemeTab(tab.id)}
 								className={cn(
 									"rounded-md px-3 py-1 text-xs font-medium transition-all dur-fast",
-									themeTab === tab.id ? "bg-base-100 text-base-content shadow-sm" : "text-base-content/60 hover:text-base-content/80",
+									themeTab === tab.id ? "bg-base-100 text-base-content shadow-sm" : "text-base-content/50 hover:text-base-content/80",
 								)}>
 								{tab.label}
 							</button>
@@ -77,8 +61,7 @@ export default function SettingsPage() {
 					</div>
 				</div>
 
-				{/* Theme grid */}
-				<div className="grid grid-cols-4 gap-2.5 sm:grid-cols-5 md:grid-cols-6">
+				<div className="grid grid-cols-5 gap-2.5 p-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10">
 					{filteredThemes.map((t) => (
 						<ThemeCard key={t} name={t} active={theme === t} onSelect={() => setTheme(t)} />
 					))}
@@ -86,86 +69,157 @@ export default function SettingsPage() {
 			</section>
 
 			{/* ── Animation Speed ───────────────────────────── */}
-			<section className="animate-fade-up rounded-2xl border border-base-content/15 bg-base-100 p-6" style={{ animationDelay: "80ms" }}>
-				<div className="mb-6 flex items-center gap-3">
-					<div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-						<Icon code="f3fd" type="solid" className="ico-4 text-primary" />
-					</div>
-					<div>
-						<h2 className="font-semibold text-base-content">Animation Speed</h2>
-						<p className="text-sm text-base-content/70">Control transition & animation pace</p>
-					</div>
+			<section className="animate-fade-up overflow-hidden rounded-2xl border border-base-content/8 bg-base-100" style={{ animationDelay: "80ms" }}>
+				<div className="border-b border-base-content/8 px-6 py-4">
+					<h2 className="text-sm font-semibold text-base-content">Animation Speed</h2>
+					<p className="text-xs text-base-content/50">Control transition & animation pace</p>
 				</div>
 
-				{/* Speed cards */}
-				<div className="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-					{ANIMATION_SPEEDS.map((s) => (
-						<SpeedCard
-							key={s.id}
-							speed={s}
-							active={speed === s.id}
-							onSelect={() => {
-								setSpeed(s.id);
-								replay();
-							}}
-						/>
-					))}
-				</div>
-
-				{/* Live preview */}
-				<div className="overflow-hidden rounded-xl border border-base-content/10 bg-base-200">
-					<div className="flex items-center justify-between border-b border-base-content/10 px-4 py-2.5">
-						<span className="text-xs font-semibold text-base-content/50">Preview</span>
-						<button
-							type="button"
-							onClick={replay}
-							className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-base-content/50 transition-all dur-fast hover:bg-base-content/5 hover:text-base-content/80">
-							<Icon code="f2f9" type="solid" className="ico-3" />
-							Replay
-						</button>
+				<div className="grid grid-cols-[1fr_1fr] gap-6 p-5">
+					{/* Speed cards */}
+					<div className="grid grid-cols-2 gap-2.5">
+						{ANIMATION_SPEEDS.map((s) => {
+							const isActive = speed === s.id;
+							return (
+								<button
+									key={s.id}
+									type="button"
+									onClick={() => setSpeed(s.id)}
+									className={cn(
+										"group flex cursor-pointer flex-col gap-4 rounded-xl border p-3.5 text-left transition-all dur",
+										isActive ? "border-primary bg-primary/5" : "border-base-content/8 hover:bg-base-content/3",
+									)}>
+									<div className="flex w-full items-start justify-between">
+										<div
+											className={cn(
+												"flex h-8 w-8 items-center justify-center rounded-lg border transition-colors dur-fast",
+												isActive
+													? "border-primary bg-primary text-primary-content"
+													: "border-base-content/10 bg-base-content/5 text-base-content/50 group-hover:border-primary/30",
+											)}>
+											<Icon code={s.icon} type="solid" className="ico-[14]" />
+										</div>
+										{isActive && <Icon code="f00c" type="solid" className="ico-3 text-primary" />}
+									</div>
+									<div>
+										<span className="block text-sm font-semibold">{s.label}</span>
+										<span className="block text-[0.65rem] text-base-content/50">{s.description}</span>
+									</div>
+								</button>
+							);
+						})}
 					</div>
-					<div key={previewKey} className="flex items-center gap-4 p-5">
-						{/* Fade-up card */}
-						<div className="animate-fade-up flex-1 rounded-lg bg-base-100 p-3 shadow-sm">
-							<div className="mb-2 h-2 w-2/3 rounded bg-base-content/15" />
-							<div className="h-2 w-1/3 rounded bg-base-content/10" />
-						</div>
 
-						{/* Expanding bar */}
-						<div className="flex flex-1 flex-col gap-2">
-							<div className="h-2 overflow-hidden rounded-full bg-base-300">
-								<div className="h-full rounded-full bg-primary" style={{ animation: "expand-width var(--dur-slow) ease-out both" }} />
-							</div>
-							<div className="h-2 overflow-hidden rounded-full bg-base-300">
-								<div className="h-full rounded-full bg-secondary" style={{ animation: "expand-width var(--dur-slow) 100ms ease-out both" }} />
-							</div>
-							<div className="h-2 overflow-hidden rounded-full bg-base-300">
-								<div className="h-full rounded-full bg-accent" style={{ animation: "expand-width var(--dur-slow) 200ms ease-out both" }} />
-							</div>
-						</div>
-
-						{/* Scale-in badges */}
-						<div className="flex flex-1 flex-wrap justify-center gap-2">
-							<div className="animate-scale-in rounded-full bg-primary/15 px-3 py-1 text-[0.6rem] font-medium text-primary">Primary</div>
-							<div
-								className="animate-scale-in rounded-full bg-secondary/15 px-3 py-1 text-[0.6rem] font-medium text-secondary"
-								style={{ animationDelay: "80ms" }}>
-								Secondary
-							</div>
-							<div
-								className="animate-scale-in rounded-full bg-accent/15 px-3 py-1 text-[0.6rem] font-medium text-accent"
-								style={{ animationDelay: "160ms" }}>
-								Accent
-							</div>
-						</div>
-					</div>
+					{/* Interactive preview */}
+					<AnimationPreview speed={speed} />
 				</div>
 			</section>
 		</div>
 	);
 }
 
-/* ── Theme Card (paint swatch) ──────────────────────── */
+/* ── Animation Preview ──────────────────────────────── */
+
+function AnimationPreview({ speed }: { speed: AnimationSpeed }) {
+	const [clicked, setClicked] = useState(false);
+
+	const handleClick = () => {
+		setClicked(true);
+		setTimeout(() => setClicked(false), 800);
+	};
+
+	return (
+		<div className="relative flex items-center justify-center overflow-hidden rounded-xl border border-base-content/10 bg-base-200/50">
+			{/* Grid pattern */}
+			<div
+				className="pointer-events-none absolute inset-0 opacity-30"
+				style={{
+					backgroundImage:
+						"linear-gradient(to right, oklch(from var(--color-base-content) l c h / 0.05) 1px, transparent 1px), linear-gradient(to bottom, oklch(from var(--color-base-content) l c h / 0.05) 1px, transparent 1px)",
+					backgroundSize: "20px 20px",
+				}}
+			/>
+
+			<span className="pointer-events-none absolute left-0 top-5 w-full select-none text-center text-[0.55rem] font-bold uppercase tracking-[0.2em] text-base-content/20">
+				Animation Preview
+			</span>
+
+			{/* Card stack */}
+			<button type="button" onClick={handleClick} className="group relative flex h-28 w-[55%] cursor-pointer items-center justify-center outline-none">
+				{/* Back card */}
+				<div
+					className={cn(
+						"pointer-events-none absolute inset-0 rounded-xl border border-primary/10 bg-primary/10 transition-all ease-out",
+						"translate-y-3 rotate-[-5deg] scale-90",
+						"group-hover:-translate-x-4 group-hover:translate-y-1 group-hover:rotate-[-10deg]",
+						"group-active:translate-x-0 group-active:translate-y-2 group-active:rotate-0 group-active:scale-90",
+						clicked && "scale-50 opacity-0",
+					)}
+					style={{ transitionDuration: "var(--dur)" }}
+				/>
+				{/* Middle card */}
+				<div
+					className={cn(
+						"pointer-events-none absolute inset-0 rounded-xl border border-base-content/10 bg-base-100/80 shadow-sm transition-all ease-out",
+						"translate-y-1.5 rotate-[-2.5deg] scale-95",
+						"group-hover:-translate-x-2 group-hover:translate-y-0.5 group-hover:rotate-[-5deg] group-hover:shadow-md",
+						"group-active:translate-x-0 group-active:translate-y-0.5 group-active:rotate-0 group-active:scale-95",
+						clicked && "scale-90 opacity-0",
+					)}
+					style={{ transitionDuration: "var(--dur)" }}
+				/>
+				{/* Front card */}
+				<div
+					className={cn(
+						"relative z-10 flex h-full w-full flex-col items-center justify-center gap-2 rounded-xl border border-base-content/10 bg-base-100 shadow-lg transition-all ease-out",
+						"group-hover:-translate-y-1 group-hover:border-primary/20 group-hover:shadow-xl",
+						"group-active:translate-y-0.5 group-active:scale-[0.98] group-active:shadow-sm",
+						clicked && "border-primary ring-4 ring-primary/10",
+					)}
+					style={{ transitionDuration: "var(--dur)" }}>
+					<div
+						className={cn(
+							"flex h-9 w-9 items-center justify-center rounded-lg bg-base-200 transition-all",
+							"group-hover:scale-110 group-hover:bg-primary/10",
+							"group-active:scale-90 group-active:bg-primary/20",
+							clicked && "bg-success/10",
+						)}
+						style={{ transitionDuration: "var(--dur)" }}>
+						<Icon
+							code={clicked ? "f00c" : "f245"}
+							type="solid"
+							className={cn(
+								"ico-4 text-base-content/50 transition-all",
+								"group-hover:rotate-12 group-hover:text-primary",
+								"group-active:rotate-0",
+								clicked && "text-success",
+							)}
+							style={{ transitionDuration: "var(--dur)" }}
+						/>
+					</div>
+					<div className="text-center">
+						<span
+							className={cn("block text-sm font-semibold transition-all", "group-hover:text-primary", clicked && "text-success")}
+							style={{ transitionDuration: "var(--dur)" }}>
+							{clicked ? (
+								"Clicked!"
+							) : (
+								<>
+									<span className="block group-hover:hidden group-active:hidden">Interact</span>
+									<span className="hidden group-hover:block group-active:hidden">Hovering</span>
+									<span className="hidden group-active:block">Pressed</span>
+								</>
+							)}
+						</span>
+						<span className="text-[0.6rem] text-base-content/40">{speed}</span>
+					</div>
+				</div>
+			</button>
+		</div>
+	);
+}
+
+/* ── Theme Card ─────────────────────────────────────── */
 
 function ThemeCard({ name, active, onSelect }: { name: string; active: boolean; onSelect: () => void }) {
 	return (
@@ -182,54 +236,13 @@ function ThemeCard({ name, active, onSelect }: { name: string; active: boolean; 
 					<Icon code="f00c" type="solid" className="ico-[8]" />
 				</div>
 			)}
-			{/* Color swatch */}
 			<div className="h-7 w-full bg-primary" />
 			<div className="flex h-1.5 w-full">
 				<div className="flex-1 bg-secondary" />
 				<div className="flex-1 bg-accent" />
 				<div className="flex-1 bg-neutral" />
 			</div>
-			{/* Name */}
 			<span className="w-full truncate px-2 py-1.5 text-center text-[0.6rem] font-medium capitalize text-base-content">{name}</span>
-		</button>
-	);
-}
-
-/* ── Speed Card with micro-animation ────────────────── */
-
-function SpeedCard({ speed, active, onSelect }: { speed: (typeof ANIMATION_SPEEDS)[number]; active: boolean; onSelect: () => void }) {
-	const demoDuration = DEMO_DURATIONS[speed.id as AnimationSpeed];
-	const isInstant = speed.id === "instant";
-
-	return (
-		<button
-			type="button"
-			onClick={onSelect}
-			className={cn(
-				"flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 p-4 transition-all dur",
-				active ? "border-primary bg-primary/10 shadow-lg shadow-primary/5" : "border-base-content/15 bg-base-200 hover:border-base-content/25 hover:bg-base-300",
-			)}>
-			{/* Micro-animation track */}
-			<div className="relative h-1.5 w-full rounded-full bg-base-content/10">
-				<div
-					className={cn("absolute top-0 left-0 h-1.5 w-1.5 rounded-full", active ? "bg-primary" : "bg-base-content/40")}
-					style={isInstant ? { left: "calc(100% - 0.375rem)" } : { animation: `bounce-x ${demoDuration} ease-in-out infinite` }}
-				/>
-			</div>
-
-			{/* Icon */}
-			<div
-				className={cn(
-					"flex h-9 w-9 items-center justify-center rounded-full transition-colors dur",
-					active ? "bg-primary/15 text-primary" : "bg-base-300 text-base-content/60",
-				)}>
-				<Icon code={speed.icon} type="solid" className="ico-4" />
-			</div>
-
-			<div className="text-center">
-				<span className={cn("block text-sm font-semibold", active ? "text-primary" : "text-base-content")}>{speed.label}</span>
-				<span className={cn("block text-[0.6rem]", active ? "text-primary/70" : "text-base-content/60")}>{speed.description}</span>
-			</div>
 		</button>
 	);
 }
