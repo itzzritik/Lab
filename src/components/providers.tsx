@@ -100,7 +100,7 @@ function AnimationProvider({ children }: { children: ReactNode }) {
 
 export function Providers({ children }: { children: ReactNode }) {
 	return (
-		<ThemeProvider attribute="data-theme" defaultTheme="black" themes={[...ALL_THEMES]}>
+		<ThemeProvider attribute="data-theme" defaultTheme="light" themes={[...ALL_THEMES]}>
 			<AnimationProvider>
 				<SidebarProvider>{children}</SidebarProvider>
 			</AnimationProvider>
