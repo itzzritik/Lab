@@ -3,7 +3,7 @@
 import { Icon } from "gliff";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSidebar } from "#components/providers";
 import type { Experiment } from "#utils/experiments";
 import { cn } from "#utils/helper";
@@ -13,9 +13,15 @@ export function Sidebar({ experiments }: { experiments: Experiment[] }) {
 	const { collapsed, toggle } = useSidebar();
 	const [mounted, setMounted] = useState(false);
 
+	const sidebarRef = useRef({ collapsed, toggle });
+	sidebarRef.current = { collapsed, toggle };
+
+	useEffect(() => setMounted(true), []);
+
 	useEffect(() => {
-		setMounted(true);
-	}, []);
+		const { collapsed: c, toggle: t } = sidebarRef.current;
+		if (window.innerWidth < 768 && !c) t();
+	}, [pathname]);
 
 	return (
 		<>

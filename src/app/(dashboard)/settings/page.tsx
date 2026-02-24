@@ -53,8 +53,8 @@ export default function SettingsPage() {
 					<div className="absolute inset-0 bg-gradient-to-t from-primary/5 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover/section:opacity-100" />
 
 					<div className="relative flex flex-col justify-between gap-6 border-base-content/5 border-b p-6 lg:flex-row lg:items-center">
-						<div className="text-center sm:text-left">
-							<div className="mb-2 flex items-center justify-center gap-3 sm:justify-start">
+						<div>
+							<div className="mb-2 flex items-center gap-3">
 								<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-secondary/10 text-secondary">
 									<Icon code="e0b5" type="solid" className="ico-5" />
 								</div>
@@ -192,7 +192,7 @@ export default function SettingsPage() {
 				</section>
 
 				<section
-					className="relative flex animate-fade-up flex-col overflow-hidden rounded-[2rem] border border-base-content/5 bg-base-200/50 shadow-sm backdrop-blur-xl lg:col-span-8"
+					className="relative hidden animate-fade-up flex-col overflow-hidden rounded-[2rem] border border-base-content/5 bg-base-200/50 shadow-sm backdrop-blur-xl lg:col-span-8 [@media(hover:hover)]:flex"
 					style={{ animationDelay: "400ms" }}>
 					<div className="relative z-10 p-6 sm:absolute sm:top-6 sm:left-6 sm:p-0">
 						<h2 className="font-bold font-display text-base-content text-xl">Interactive Preview</h2>
