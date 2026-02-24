@@ -7,60 +7,121 @@ export default function HomePage() {
 	const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
 
 	return (
-		<div className="p-8">
+		<div className="min-h-full w-full p-6 md:p-10 pb-20">
 			{/* Header */}
-			<div className="mb-10 animate-fade-up pt-2">
-				<p className="mb-1 text-sm text-base-content/60">{today}</p>
-				<h1 className="mb-1 font-display text-3xl font-bold tracking-tight">Welcome back</h1>
-				<p className="text-base-content/70">Your creative experiments at a glance</p>
+			<div className="relative mb-12 flex flex-col items-start gap-2 pt-4">
+				<div className="absolute -left-10 -top-10 -z-10 h-64 w-64 rounded-full bg-primary/10 blur-[100px]" />
+
+				<p
+					className="animate-fade-up text-sm font-semibold uppercase tracking-widest text-primary/80"
+					style={{ animationDuration: "800ms", animationFillMode: "both" }}>
+					{today}
+				</p>
+
+				<h1
+					className="animate-fade-up font-display text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-base-content to-base-content/60 md:text-6xl"
+					style={{ animationDuration: "800ms", animationDelay: "100ms", animationFillMode: "both" }}>
+					Welcome back
+				</h1>
+
+				<p className="animate-fade-up text-lg text-base-content/60" style={{ animationDuration: "800ms", animationDelay: "200ms", animationFillMode: "both" }}>
+					Interactive playground for creative coding, experiments, and web innovation
+				</p>
 			</div>
 
-			{/* Stats */}
-			<div className="mb-10 animate-fade-up grid grid-cols-2 gap-4 sm:grid-cols-4" style={{ animationDelay: "60ms" }}>
-				<div className="flex items-center gap-4 rounded-xl border border-base-content/10 bg-base-200 p-4">
-					<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-						<Icon code="f0c3" type="solid" className="ico-4 text-primary" />
+			<div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:grid-rows-[auto_auto]">
+				{/* Stats Card - Bento Grid Hero */}
+				<section
+					className="group/section relative animate-fade-up overflow-hidden rounded-[2rem] border border-base-content/5 bg-base-200/50 p-6 sm:p-8 shadow-sm backdrop-blur-xl lg:col-span-12"
+					style={{ animationDelay: "300ms", animationFillMode: "both" }}>
+					<div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover/section:opacity-100" />
+					<div className="absolute -right-20 -top-20 z-0 h-48 w-48 rounded-full bg-primary/10 blur-[40px] transition-transform duration-700 group-hover/section:scale-150" />
+
+					<div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+						<div>
+							<div className="mb-2 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-3">
+								<div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary shadow-lg shadow-primary/30 text-primary-content">
+									<Icon code="f0c3" type="solid" className="ico-5" />
+								</div>
+								<div>
+									<h2 className="font-display text-2xl font-bold text-base-content">Active Projects</h2>
+									<p className="text-sm text-base-content/60">Currently tracking {experiments.length} creative explorations.</p>
+								</div>
+							</div>
+						</div>
+
+						<div className="flex gap-4 self-start md:self-auto">
+							<div className="flex flex-col items-center justify-center rounded-2xl border border-base-content/5 bg-base-100/50 p-4 min-w-[100px] backdrop-blur-sm">
+								<span className="font-display text-4xl font-black text-primary">{experiments.length}</span>
+								<span className="text-xs font-bold uppercase tracking-widest text-base-content/40 mt-1">Total</span>
+							</div>
+						</div>
 					</div>
-					<div>
-						<p className="text-2xl font-bold">{experiments.length}</p>
-						<p className="text-xs text-base-content/60">Experiments</p>
-					</div>
+				</section>
+
+				{/* Experiments Header */}
+				<div className="animate-fade-up col-span-full mt-4 flex items-center gap-3" style={{ animationDelay: "400ms", animationFillMode: "both" }}>
+					<h2 className="font-display text-xl font-bold text-base-content">Experiments Gallery</h2>
+					<div className="h-px flex-1 bg-gradient-to-r from-base-content/10 to-transparent" />
 				</div>
-			</div>
 
-			{/* Experiments */}
-			<div className="mb-6 animate-fade-up" style={{ animationDelay: "120ms" }}>
-				<h2 className="text-lg font-semibold">Experiments</h2>
-			</div>
+				{/* Experiments Grid */}
+				<div className="col-span-full grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+					{experiments.map((exp, i) => (
+						<div key={exp.slug} className="animate-fade-up [perspective:1000px]" style={{ animationDelay: `${500 + i * 100}ms`, animationFillMode: "both" }}>
+							<Link
+								href={`/${exp.slug}`}
+								className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-base-content/5 bg-base-200/50 p-6 shadow-sm backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-2 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/20"
+								style={{
+									transformStyle: "preserve-3d",
+								}}>
+								{/* Card Glow */}
+								<div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-				{experiments.map((exp, i) => (
-					<Link
-						key={exp.slug}
-						href={`/${exp.slug}`}
-						className="group animate-fade-up flex gap-4 rounded-xl border border-base-content/10 bg-base-200 p-5 transition-all dur hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-lg"
-						style={{ animationDelay: `${180 + i * 80}ms` }}>
-						<div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 transition-colors dur group-hover:bg-primary/15">
-							<Icon code={exp.icon} type="solid" className="ico-5 text-primary" />
+								<div className="relative z-10 flex flex-1 flex-col">
+									{/* Top section: Icon and Arrow */}
+									<div className="mb-6 flex items-start justify-between">
+										<div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-base-100 shadow-sm transition-all duration-500 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-content group-hover:shadow-primary/30 text-base-content/80 ring-1 ring-base-content/5">
+											<Icon code={exp.icon} type="solid" className="ico-[24] transition-transform duration-500 group-hover:rotate-12" />
+										</div>
+										<div className="flex h-8 w-8 items-center justify-center rounded-full bg-base-content/5 text-base-content/40 transition-all duration-500 group-hover:bg-base-content/10 group-hover:text-primary">
+											<Icon
+												code="f061"
+												type="solid"
+												className="ico-3 -rotate-45 transition-transform duration-500 group-hover:rotate-0 group-hover:translate-x-0.5"
+											/>
+										</div>
+									</div>
+
+									{/* Content section */}
+									<div className="mt-auto">
+										<h3 className="mb-2 font-display text-xl font-bold tracking-tight text-base-content transition-colors duration-300 group-hover:text-primary">
+											{exp.name}
+										</h3>
+										{exp.description && <p className="line-clamp-2 text-sm text-base-content/60 leading-relaxed">{exp.description}</p>}
+									</div>
+								</div>
+
+								{/* Bottom highlight bar */}
+								<div className="absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r from-primary via-secondary to-accent opacity-80 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:w-full" />
+							</Link>
 						</div>
-						<div className="min-w-0 flex-1">
-							<h3 className="font-semibold">{exp.name}</h3>
-							{exp.description && <p className="mt-0.5 truncate text-sm text-base-content/60">{exp.description}</p>}
-						</div>
-						<Icon
-							code="f054"
-							type="solid"
-							className="ico-3 shrink-0 self-center text-base-content/30 transition-all dur group-hover:translate-x-0.5 group-hover:text-primary/60"
-						/>
-					</Link>
-				))}
+					))}
 
-				{experiments.length === 0 && (
-					<div className="animate-fade-in col-span-full py-20 text-center text-base-content/50">
-						<Icon code="f0c3" type="solid" className="ico-12 mx-auto mb-4 block" />
-						<p>No experiments yet. Add a folder under (experiments) to get started.</p>
-					</div>
-				)}
+					{experiments.length === 0 && (
+						<div className="animate-fade-up col-span-full flex flex-col items-center justify-center py-24 text-center" style={{ animationDelay: "500ms" }}>
+							<div className="relative mb-6 flex h-24 w-24 items-center justify-center rounded-3xl bg-base-200 shadow-inner">
+								<div className="absolute inset-0 rounded-3xl animate-ping border border-primary/20" style={{ animationDuration: "3s" }} />
+								<Icon code="f0c3" type="solid" className="ico-[40] text-base-content/20" />
+							</div>
+							<h3 className="mb-2 font-display text-2xl font-bold text-base-content/60">Empty Canvas</h3>
+							<p className="max-w-md text-base-content/40">
+								No experiments yet. Add a new folder under the{" "}
+								<code className="rounded bg-base-200 px-1.5 py-0.5 text-xs text-base-content/60">(experiments)</code> directory to get started.
+							</p>
+						</div>
+					)}
+				</div>
 			</div>
 		</div>
 	);
