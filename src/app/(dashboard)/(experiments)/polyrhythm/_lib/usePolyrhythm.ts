@@ -119,12 +119,31 @@ export function usePolyrhythm(
 		});
 		observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
-		const t0 = Date.now();
+		let t0 = Date.now();
+		let hiddenAt = 0;
 		const arcs = Array.from({ length: N }, (_, i) => {
 			const v = vel(i);
 			return { v, last: 0, next: t0 + (Math.PI / v) * 1000 };
 		});
 		const ripples: Ripple[] = [];
+
+		const onVisibilityChange = () => {
+			if (document.hidden) {
+				hiddenAt = Date.now();
+			} else if (hiddenAt > 0) {
+				const elapsed = Date.now() - hiddenAt;
+				t0 += elapsed;
+				for (const arc of arcs) {
+					arc.next += elapsed;
+					if (arc.last > 0) arc.last += elapsed;
+				}
+				for (const rip of ripples) {
+					rip.t += elapsed;
+				}
+				hiddenAt = 0;
+			}
+		};
+		document.addEventListener("visibilitychange", onVisibilityChange);
 
 		const BELL_PARTIALS: [number, number, number][] = [
 			[1, 0.04, 1.2],
@@ -262,6 +281,7 @@ export function usePolyrhythm(
 		return () => {
 			cancelAnimationFrame(raf);
 			observer.disconnect();
+			document.removeEventListener("visibilitychange", onVisibilityChange);
 		};
 	}, [ref]);
 

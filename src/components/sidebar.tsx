@@ -157,14 +157,6 @@ function NavItem({
 			</span>
 
 			{active && !collapsed && <div className="absolute right-2 top-1/2 h-4 w-1 -translate-y-1/2 rounded-full bg-primary" />}
-
-			{isSettings && !active && !collapsed && (
-				<Icon
-					code="f054"
-					type="solid"
-					className="absolute right-3 top-1/2 -translate-y-1/2 ico-3 opacity-0 transition-opacity duration-300 group-hover:opacity-30"
-				/>
-			)}
 		</Link>
 	);
 
