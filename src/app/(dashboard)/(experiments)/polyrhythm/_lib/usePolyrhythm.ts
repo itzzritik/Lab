@@ -39,11 +39,38 @@ export function usePolyrhythm(
 		});
 		const ripples: Ripple[] = [];
 
+		const BELL_PARTIALS: [number, number, number][] = [
+			[1, 0.04, 1.2],
+			[2.4, 0.02, 0.8],
+			[5.43, 0.012, 0.5],
+			[6.8, 0.008, 0.4],
+			[8.21, 0.005, 0.3],
+		];
+		const playBell = (ac: AudioContext, freq: number) => {
+			for (const [partial, vol, decay] of BELL_PARTIALS) {
+				const osc = ac.createOscillator();
+				const gain = ac.createGain();
+				osc.type = "sine";
+				osc.frequency.value = freq * partial;
+				gain.gain.setValueAtTime(vol, ac.currentTime);
+				gain.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + decay);
+				osc.connect(gain).connect(ac.destination);
+				osc.start();
+				osc.stop(ac.currentTime + decay);
+			}
+		};
+
 		const tone = (i: number) => {
 			if (!optsRef.current.soundEnabled || document.hidden) return;
 			if (!audioRef.current) audioRef.current = new AudioContext();
 			const ac = audioRef.current;
 			const voice = VOICES[optsRef.current.instrument];
+
+			if (optsRef.current.instrument === "bell") {
+				playBell(ac, voice.freq(i));
+				return;
+			}
+
 			const osc = ac.createOscillator();
 			const gain = ac.createGain();
 			osc.type = voice.type;

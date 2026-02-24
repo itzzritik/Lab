@@ -10,8 +10,8 @@
 }
 
 @utility ico-* {
-	--iconSize: calc(var(--spacing) * --value(integer));
-	--iconSize: --value([integer])px;
+	--iconSize: calc(var(--spacing) * --value(integer)) !important;
+	--iconSize: --value([integer])px !important;
 }
 
 /* ── Animation speed tokens ─────────────────────────── */
