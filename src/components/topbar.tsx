@@ -36,9 +36,9 @@ function ThemePicker() {
 
 	return (
 		<div className="dropdown dropdown-end" title="Change Theme">
-			<div
+			<button
 				tabIndex={0}
-				role="button"
+				type="button"
 				className="group flex items-center justify-between gap-3 rounded-xl border border-base-content/5 bg-base-200/50 p-1.5 pr-3 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-base-content/15 hover:bg-base-200 active:scale-95"
 				aria-label="Change Theme">
 				<div className="grid shrink-0 grid-cols-2 gap-[3px] rounded-lg bg-base-100 p-1.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] transition-colors duration-300 group-hover:shadow-sm">
@@ -48,7 +48,7 @@ function ThemePicker() {
 					<div className="size-1.5 rounded-full bg-accent shadow-sm" />
 				</div>
 				<Icon code="f078" type="solid" className="ico-3 text-base-content/40 transition-transform duration-300 group-hover:text-base-content/70" />
-			</div>
+			</button>
 
 			<div className="dropdown-content z-[100] mt-4 w-64 origin-top-right rounded-3xl border border-base-content/5 bg-base-100/90 p-2 shadow-2xl backdrop-blur-2xl transition-all duration-300 ease-spring">
 				<div className="mb-2 px-3 pt-2">

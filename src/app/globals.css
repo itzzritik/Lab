@@ -11,7 +11,7 @@
 
 @utility ico-* {
 	--iconSize: calc(var(--spacing) * --value(integer)) !important;
-	--iconSize: --value([integer])px !important;
+	--iconSize: --value([integer]) px !important;
 }
 
 @utility ease-spring {

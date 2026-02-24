@@ -18,6 +18,7 @@ export function Sidebar({ experiments }: { experiments: Experiment[] }) {
 
 	useEffect(() => setMounted(true), []);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: intentionally re-run on route change
 	useEffect(() => {
 		const { collapsed: c, toggle: t } = sidebarRef.current;
 		if (window.innerWidth < 768 && !c) t();
