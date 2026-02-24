@@ -19,7 +19,6 @@ const vel = (i: number) => ((MAX_CYCLES - i) * 2 * Math.PI) / DURATION;
 
 type RGB = [number, number, number];
 
-/** Sample a DaisyUI color class via pixel readback — guaranteed correct RGB. */
 const sampleClass = (cls: string): RGB => {
 	const el = document.createElement("div");
 	el.className = cls;
@@ -75,7 +74,6 @@ const hslToRgb = (h: number, s: number, l: number): RGB => {
 
 const rgba = (c: RGB, a: number) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 
-/** Interpolate hue between two angles via the shortest arc. */
 const lerpHue = (a: number, b: number, t: number) => {
 	let d = b - a;
 	if (d > 0.5) d -= 1;
@@ -83,8 +81,6 @@ const lerpHue = (a: number, b: number, t: number) => {
 	return ((a + d * t) % 1 + 1) % 1;
 };
 
-/** Build a 21-color palette interpolating primary → secondary in HSL,
- *  with lightness guaranteed to contrast well against bg-base-100. */
 const buildPalette = (): RGB[] => {
 	const primary = sampleClass("bg-primary");
 	const secondary = sampleClass("bg-secondary");
@@ -93,8 +89,6 @@ const buildPalette = (): RGB[] => {
 	const hslB = rgbToHsl(secondary);
 	const bgL = rgbToHsl(bg)[2];
 
-	// Ensure palette lightness contrasts against background:
-	// dark bg → push lightness high; light bg → push lightness low
 	const brightL = Math.max(hslA[2], hslB[2]);
 	const targetL = bgL < 0.5 ? Math.max(brightL, 0.65) : Math.min(brightL, 0.35);
 
@@ -119,7 +113,6 @@ export function usePolyrhythm(
 		const ctx = canvas?.getContext("2d");
 		if (!canvas || !ctx) return;
 
-		// ── Theme palette: smooth gradient across primary → secondary → accent ──
 		let palette = buildPalette();
 		const observer = new MutationObserver(() => {
 			palette = buildPalette();
@@ -200,7 +193,6 @@ export function usePolyrhythm(
 			ctx.clearRect(0, 0, w, h);
 			ctx.lineCap = "round";
 
-			// ── Arcs ──
 			for (let i = 0; i < N; i++) {
 				const arc = arcs[i];
 				if (!arc) continue;
@@ -209,7 +201,6 @@ export function usePolyrhythm(
 				const fade = Math.min((now - arc.last) / 800, 1);
 				const gap = (dotR * 4) / r;
 
-				// Ring arcs — lighter shade
 				ctx.lineWidth = sz * 0.0015;
 				ctx.strokeStyle = rgba(c, 0.25 + 0.2 * (1 - fade));
 				for (const off of [Math.PI, 0]) {
@@ -218,7 +209,6 @@ export function usePolyrhythm(
 					ctx.stroke();
 				}
 
-				// Endpoints — medium shade
 				const endR = dotR * (0.5 + 0.7 * (1 - fade));
 				ctx.fillStyle = rgba(c, 0.35 + 0.25 * (1 - fade));
 				for (const a of [0, Math.PI]) {
@@ -227,7 +217,6 @@ export function usePolyrhythm(
 					ctx.fill();
 				}
 
-				// Angle + impact check
 				const angle = (Math.PI + sec * arc.v) % (2 * Math.PI);
 				if (now >= arc.next) {
 					tone(i);
@@ -237,7 +226,6 @@ export function usePolyrhythm(
 					ripples.push({ x: cx + r * Math.cos(side), y: cy + r * Math.sin(side), t: now, idx: i });
 				}
 
-				// Moving dot — full base color with glow
 				ctx.shadowBlur = 10;
 				ctx.shadowColor = rgba(c, 0.5);
 				ctx.fillStyle = rgba(c, 0.9);
@@ -247,7 +235,6 @@ export function usePolyrhythm(
 				ctx.shadowBlur = 0;
 			}
 
-			// ── Ripples — each uses its ring's palette color ──
 			for (let j = ripples.length - 1; j >= 0; j--) {
 				const rip = ripples[j];
 				if (!rip) continue;

@@ -57,7 +57,7 @@ function ThemePicker() {
 					<span className="text-xs font-bold uppercase tracking-widest text-base-content/40">Select Theme</span>
 				</div>
 				<ul className="max-h-[min(60vh,300px)] overflow-y-auto overflow-x-hidden p-1 space-y-1">
-					{ALL_THEMES.map((t, i) => (
+					{ALL_THEMES.map((t) => (
 						<li key={t}>
 							<button
 								type="button"
@@ -67,7 +67,6 @@ function ThemePicker() {
 								)}
 								onClick={() => {
 									setTheme(t);
-									// Close dropdown behavior via DOM
 									if (document.activeElement instanceof HTMLElement) {
 										document.activeElement.blur();
 									}

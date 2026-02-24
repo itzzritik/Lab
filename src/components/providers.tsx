@@ -3,8 +3,6 @@
 import { ThemeProvider } from "next-themes";
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from "react";
 
-/* ── Theme lists ─────────────────────────────────────── */
-
 export const LIGHT_THEMES = [
 	"light",
 	"cupcake",
@@ -34,10 +32,6 @@ export const DARK_THEMES = ["dark", "synthwave", "halloween", "forest", "black",
 
 export const ALL_THEMES = [...LIGHT_THEMES, ...DARK_THEMES] as const;
 
-export const FEATURED_THEMES = ["light", "dark", "nord", "black", "sunset"] as const;
-
-/* ── Sidebar ─────────────────────────────────────────── */
-
 type SidebarContextValue = { collapsed: boolean; toggle: () => void };
 const SidebarContext = createContext<SidebarContextValue>({ collapsed: false, toggle: () => {} });
 export const useSidebar = () => useContext(SidebarContext);
@@ -47,8 +41,6 @@ function SidebarProvider({ children }: { children: ReactNode }) {
 	const toggle = useCallback(() => setCollapsed((v) => !v), []);
 	return <SidebarContext value={{ collapsed, toggle }}>{children}</SidebarContext>;
 }
-
-/* ── Animation speed ─────────────────────────────────── */
 
 export const ANIMATION_SPEEDS = [
 	{ id: "instant", label: "Instant", description: "No animations", icon: "f0e7" },
@@ -95,8 +87,6 @@ function AnimationProvider({ children }: { children: ReactNode }) {
 
 	return <AnimationContext value={{ speed, setSpeed }}>{children}</AnimationContext>;
 }
-
-/* ── Root provider ───────────────────────────────────── */
 
 export function Providers({ children }: { children: ReactNode }) {
 	return (

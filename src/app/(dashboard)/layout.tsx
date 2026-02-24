@@ -8,7 +8,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
 	return (
 		<div className="flex h-dvh flex-col overflow-hidden bg-base-100">
-			{/* Dashboard accent bar */}
 			<div className="h-1 shrink-0 bg-gradient-to-r from-primary via-secondary to-accent" />
 
 			<div className="flex min-h-0 flex-1">

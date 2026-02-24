@@ -1,0 +1,11 @@
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
+
+export const metadata: Metadata = {
+	title: "Settings | Ritik's Lab",
+	description: "Customize your workspace appearance and animation speed",
+};
+
+export default function SettingsLayout({ children }: { children: ReactNode }) {
+	return children;
+}
