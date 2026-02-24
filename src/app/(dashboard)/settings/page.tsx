@@ -38,9 +38,7 @@ export default function SettingsPage() {
 		<div className="min-h-full w-full p-6 md:p-10 pb-20">
 			<div className="relative mb-12 flex flex-col items-start gap-2">
 				<div className="absolute -left-10 -top-10 -z-10 h-40 w-40 rounded-full bg-primary/20 blur-[80px]" />
-				<h1
-					className="animate-fade-up font-display text-4xl font-black tracking-tight text-base-content md:text-5xl"
-					style={{ animationDuration: "800ms" }}>
+				<h1 className="animate-fade-up font-display text-4xl font-black tracking-tight text-base-content md:text-5xl" style={{ animationDuration: "800ms" }}>
 					Settings
 				</h1>
 				<p className="animate-fade-up text-base text-base-content/60" style={{ animationDuration: "800ms", animationDelay: "100ms" }}>

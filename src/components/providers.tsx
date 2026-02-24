@@ -27,7 +27,22 @@ export const LIGHT_THEMES = [
 	"silk",
 ] as const;
 
-export const DARK_THEMES = ["dark", "synthwave", "halloween", "forest", "aqua", "black", "luxury", "dracula", "business", "night", "coffee", "dim", "abyss", "sunset"] as const;
+export const DARK_THEMES = [
+	"dark",
+	"synthwave",
+	"halloween",
+	"forest",
+	"aqua",
+	"black",
+	"luxury",
+	"dracula",
+	"business",
+	"night",
+	"coffee",
+	"dim",
+	"abyss",
+	"sunset",
+] as const;
 
 export const ALL_THEMES = [...LIGHT_THEMES, ...DARK_THEMES] as const;
 

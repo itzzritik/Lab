@@ -78,7 +78,7 @@ const lerpHue = (a: number, b: number, t: number) => {
 	let d = b - a;
 	if (d > 0.5) d -= 1;
 	if (d < -0.5) d += 1;
-	return ((a + d * t) % 1 + 1) % 1;
+	return (((a + d * t) % 1) + 1) % 1;
 };
 
 const buildPalette = (): RGB[] => {
@@ -100,10 +100,7 @@ const buildPalette = (): RGB[] => {
 	});
 };
 
-export function usePolyrhythm(
-	ref: React.RefObject<HTMLCanvasElement | null>,
-	opts: { soundEnabled: boolean; instrument: Instrument },
-) {
+export function usePolyrhythm(ref: React.RefObject<HTMLCanvasElement | null>, opts: { soundEnabled: boolean; instrument: Instrument }) {
 	const optsRef = useRef(opts);
 	optsRef.current = opts;
 	const audioRef = useRef<AudioContext | null>(null);

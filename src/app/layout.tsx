@@ -8,6 +8,7 @@ import "./globals.css";
 export const metadata: Metadata = {
 	title: "Ritik's Lab",
 	description: "Interactive experiments & creative explorations",
+	metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://lab.ritik.me"),
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

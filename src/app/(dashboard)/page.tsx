@@ -8,14 +8,7 @@ export const metadata: Metadata = {
 	description: "Interactive playground for creative coding, experiments, and web innovation",
 };
 
-const GREETINGS = [
-	"Welcome to the lab",
-	"Let's cook.",
-	"Break things beautifully.",
-	"Where ideas mutate.",
-	"Tinker. Break. Ship.",
-	"What's brewing?",
-];
+const GREETINGS = ["Welcome to the lab", "Let's cook.", "Break things beautifully.", "Where ideas mutate.", "Tinker. Break. Ship.", "What's brewing?"];
 
 export default function HomePage() {
 	const experiments = getExperiments();
