@@ -9,16 +9,16 @@ import { cn } from "#utils/helper";
 type ThemeTab = "all" | "light" | "dark";
 
 const TABS: { id: ThemeTab; label: string; icon: string }[] = [
-	{ id: "all", label: "All", icon: "e196" },
 	{ id: "light", label: "Light", icon: "e28f" },
 	{ id: "dark", label: "Dark", icon: "f186" },
+	{ id: "all", label: "All", icon: "e196" },
 ];
 
 export default function SettingsPage() {
 	const { theme, setTheme } = useTheme();
 	const { speed, setSpeed } = useAnimation();
 	const [mounted, setMounted] = useState(false);
-	const [themeTab, setThemeTab] = useState<ThemeTab>("all");
+	const [themeTab, setThemeTab] = useState<ThemeTab>("dark");
 
 	useEffect(() => setMounted(true), []);
 
@@ -48,89 +48,10 @@ export default function SettingsPage() {
 				</p>
 			</div>
 
-			<div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:grid-rows-[minmax(300px,auto)_auto]">
-				<section
-					className="group/section relative animate-fade-up overflow-hidden rounded-[2rem] border border-base-content/5 bg-base-200/50 p-6 shadow-sm backdrop-blur-xl lg:col-span-4"
-					style={{ animationDelay: "200ms" }}>
-					<div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover/section:opacity-100" />
-
-					<div className="relative mb-6">
-						<div className="mb-2 flex items-center gap-3">
-							<div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-								<Icon code="f0e4" type="solid" className="ico-5" />
-							</div>
-							<h2 className="font-display text-xl font-bold text-base-content">Animation Speed</h2>
-						</div>
-						<p className="text-sm text-base-content/60">Configure interface animation speed and transition physics.</p>
-					</div>
-
-					<div className="relative grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
-						{ANIMATION_SPEEDS.map((s) => {
-							const isActive = speed === s.id;
-							return (
-								<button
-									key={s.id}
-									type="button"
-									onClick={() => setSpeed(s.id)}
-									className={cn(
-										"group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-2xl border p-4 text-left transition-all duration-300 hover:scale-[1.02] active:scale-[0.97]",
-										"ease-[cubic-bezier(0.34,1.56,0.64,1)]",
-										isActive
-											? "border-primary/30 bg-primary/10 shadow-[0_0_20px_oklch(from_var(--color-primary)_l_c_h_/_0.1)]"
-											: "border-base-content/5 bg-base-100/50 hover:border-base-content/15 hover:bg-base-100",
-									)}>
-									{isActive && <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-primary/20 blur-[20px]" />}
-									<div className="relative flex items-center gap-4">
-										<div
-											className={cn(
-												"flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors duration-300",
-												isActive
-													? "border-primary/50 bg-primary text-primary-content shadow-lg shadow-primary/20"
-													: "border-base-content/10 bg-base-content/5 text-base-content/50 group-hover:border-primary/30 group-hover:text-primary",
-											)}>
-											<Icon code={s.icon} type="solid" className="ico-[18]" />
-										</div>
-										<div className="min-w-0 pr-2">
-											<span
-												className={cn(
-													"block font-semibold transition-colors duration-300 truncate",
-													isActive ? "text-primary" : "text-base-content",
-												)}>
-												{s.label}
-											</span>
-											<span className="block text-xs text-base-content/50 truncate">{s.description}</span>
-										</div>
-									</div>
-									<div
-										className={cn(
-											"relative flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all duration-300",
-											isActive
-												? "border-primary bg-primary text-primary-content scale-100 opacity-100"
-												: "border-base-content/20 scale-50 opacity-0",
-										)}>
-										<Icon code="f00c" type="solid" className="ico-[10]" />
-									</div>
-								</button>
-							);
-						})}
-					</div>
-				</section>
-
-				<section
-					className="relative animate-fade-up overflow-hidden rounded-[2rem] border border-base-content/5 bg-base-200/50 shadow-sm backdrop-blur-xl lg:col-span-8 flex flex-col"
-					style={{ animationDelay: "300ms" }}>
-					<div className="relative p-6 z-10 sm:absolute sm:left-6 sm:top-6 sm:p-0">
-						<h2 className="font-display text-xl font-bold text-base-content">Interactive Preview</h2>
-						<p className="text-sm text-base-content/60">Hover and click to feel the motion</p>
-					</div>
-					<div className="h-[300px] w-full lg:h-full flex-1 min-h-[300px]">
-						<AnimationPreview3D speed={speed} />
-					</div>
-				</section>
-
+			<div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:grid-rows-[auto_minmax(300px,auto)]">
 				<section
 					className="group/section relative animate-fade-up overflow-hidden rounded-[2rem] border border-base-content/5 bg-base-200/50 shadow-sm backdrop-blur-xl lg:col-span-12"
-					style={{ animationDelay: "400ms" }}>
+					style={{ animationDelay: "200ms" }}>
 					<div className="absolute inset-0 bg-gradient-to-t from-primary/5 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover/section:opacity-100" />
 
 					<div className="relative flex flex-col justify-between gap-6 border-b border-base-content/5 p-6 lg:flex-row lg:items-center">
@@ -205,6 +126,85 @@ export default function SettingsPage() {
 						</div>
 					</div>
 				</section>
+
+				<section
+					className="group/section relative animate-fade-up overflow-hidden rounded-[2rem] border border-base-content/5 bg-base-200/50 p-6 shadow-sm backdrop-blur-xl lg:col-span-4"
+					style={{ animationDelay: "300ms" }}>
+					<div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover/section:opacity-100" />
+
+					<div className="relative mb-6">
+						<div className="mb-2 flex items-center gap-3">
+							<div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+								<Icon code="f0e4" type="solid" className="ico-5" />
+							</div>
+							<h2 className="font-display text-xl font-bold text-base-content">Animation Speed</h2>
+						</div>
+						<p className="text-sm text-base-content/60">Configure interface animation speed and transition physics.</p>
+					</div>
+
+					<div className="relative grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
+						{ANIMATION_SPEEDS.map((s) => {
+							const isActive = speed === s.id;
+							return (
+								<button
+									key={s.id}
+									type="button"
+									onClick={() => setSpeed(s.id)}
+									className={cn(
+										"group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-2xl border p-4 text-left transition-all duration-300 hover:scale-[1.02] active:scale-[0.97]",
+										"ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+										isActive
+											? "border-primary/30 bg-primary/10 shadow-[0_0_20px_oklch(from_var(--color-primary)_l_c_h_/_0.1)]"
+											: "border-base-content/5 bg-base-100/50 hover:border-base-content/15 hover:bg-base-100",
+									)}>
+									{isActive && <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-primary/20 blur-[20px]" />}
+									<div className="relative flex items-center gap-4">
+										<div
+											className={cn(
+												"flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors duration-300",
+												isActive
+													? "border-primary/50 bg-primary text-primary-content shadow-lg shadow-primary/20"
+													: "border-base-content/10 bg-base-content/5 text-base-content/50 group-hover:border-primary/30 group-hover:text-primary",
+											)}>
+											<Icon code={s.icon} type="solid" className="ico-[18]" />
+										</div>
+										<div className="min-w-0 pr-2">
+											<span
+												className={cn(
+													"block font-semibold transition-colors duration-300 truncate",
+													isActive ? "text-primary" : "text-base-content",
+												)}>
+												{s.label}
+											</span>
+											<span className="block text-xs text-base-content/50 truncate">{s.description}</span>
+										</div>
+									</div>
+									<div
+										className={cn(
+											"relative flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all duration-300",
+											isActive
+												? "border-primary bg-primary text-primary-content scale-100 opacity-100"
+												: "border-base-content/20 scale-50 opacity-0",
+										)}>
+										<Icon code="f00c" type="solid" className="ico-[10]" />
+									</div>
+								</button>
+							);
+						})}
+					</div>
+				</section>
+
+				<section
+					className="relative animate-fade-up overflow-hidden rounded-[2rem] border border-base-content/5 bg-base-200/50 shadow-sm backdrop-blur-xl lg:col-span-8 flex flex-col"
+					style={{ animationDelay: "400ms" }}>
+					<div className="relative p-6 z-10 sm:absolute sm:left-6 sm:top-6 sm:p-0">
+						<h2 className="font-display text-xl font-bold text-base-content">Interactive Preview</h2>
+						<p className="text-sm text-base-content/60">Hover and click to feel the motion</p>
+					</div>
+					<div className="h-[300px] w-full lg:h-full flex-1 min-h-[300px]">
+						<AnimationPreview3D speed={speed} />
+					</div>
+				</section>
 			</div>
 		</div>
 	);
@@ -224,7 +224,7 @@ function AnimationPreview3D({ speed }: { speed: AnimationSpeed }) {
 	const durMs = speed === "swift" ? 150 : speed === "smooth" ? 300 : speed === "gentle" ? 500 : 0;
 
 	return (
-		<div className="relative flex h-full min-h-[350px] w-full items-center justify-center overflow-hidden rounded-[2.5rem] bg-base-content/[0.02] p-8 shadow-inner ring-1 ring-base-content/5">
+		<div className="relative flex h-full min-h-[350px] w-full items-center justify-center overflow-hidden p-8">
 			<div className="absolute inset-0 z-0 overflow-hidden opacity-40 blur-[80px] saturate-200">
 				<div
 					className="absolute left-1/4 top-1/4 h-72 w-72 rounded-full bg-primary/40 mix-blend-multiply dark:mix-blend-screen"

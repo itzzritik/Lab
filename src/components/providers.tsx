@@ -13,7 +13,6 @@ export const LIGHT_THEMES = [
 	"cyberpunk",
 	"valentine",
 	"garden",
-	"aqua",
 	"lofi",
 	"pastel",
 	"fantasy",
@@ -28,7 +27,7 @@ export const LIGHT_THEMES = [
 	"silk",
 ] as const;
 
-export const DARK_THEMES = ["dark", "synthwave", "halloween", "forest", "black", "luxury", "dracula", "business", "night", "coffee", "dim", "abyss", "sunset"] as const;
+export const DARK_THEMES = ["dark", "synthwave", "halloween", "forest", "aqua", "black", "luxury", "dracula", "business", "night", "coffee", "dim", "abyss", "sunset"] as const;
 
 export const ALL_THEMES = [...LIGHT_THEMES, ...DARK_THEMES] as const;
 
@@ -90,7 +89,7 @@ function AnimationProvider({ children }: { children: ReactNode }) {
 
 export function Providers({ children }: { children: ReactNode }) {
 	return (
-		<ThemeProvider attribute="data-theme" defaultTheme="light" themes={[...ALL_THEMES]}>
+		<ThemeProvider attribute="data-theme" defaultTheme="halloween" themes={[...ALL_THEMES]}>
 			<AnimationProvider>
 				<SidebarProvider>{children}</SidebarProvider>
 			</AnimationProvider>

@@ -30,7 +30,7 @@ export function Sidebar({ experiments }: { experiments: Experiment[] }) {
 					"md:shrink-0",
 				)}>
 				<div className="flex h-16 shrink-0 items-center px-4">
-					<div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary text-primary-content shadow-lg shadow-primary/20 transition-transform duration-300 hover:scale-105 active:scale-95">
+					<div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-content shadow-lg shadow-primary/20 transition-transform duration-300 hover:scale-105 active:scale-95">
 						<Icon code="f0c3" type="solid" className="ico-[16]" />
 					</div>
 					<div

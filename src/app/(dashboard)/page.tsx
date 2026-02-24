@@ -8,25 +8,33 @@ export const metadata: Metadata = {
 	description: "Interactive playground for creative coding, experiments, and web innovation",
 };
 
+const GREETINGS = [
+	"Welcome to the lab",
+	"Let's cook.",
+	"Break things beautifully.",
+	"Where ideas mutate.",
+	"Tinker. Break. Ship.",
+	"What's brewing?",
+];
+
 export default function HomePage() {
 	const experiments = getExperiments();
 	const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+	const greeting = GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
 
 	return (
 		<div className="min-h-full w-full p-6 md:p-10 pb-20">
 			<div className="relative mb-12 flex flex-col items-start gap-2 pt-4">
 				<div className="absolute -left-10 -top-10 -z-10 h-64 w-64 rounded-full bg-primary/10 blur-[100px]" />
 
-				<p
-					className="animate-fade-up text-sm font-semibold uppercase tracking-widest text-primary/80"
-					style={{ animationDuration: "800ms" }}>
+				<p className="animate-fade-up text-sm font-semibold uppercase tracking-widest text-primary/80" style={{ animationDuration: "800ms" }}>
 					{today}
 				</p>
 
 				<h1
-					className="animate-fade-up font-display text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-base-content to-base-content/60 md:text-6xl"
+					className="animate-fade-up font-display text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-base-content to-base-content/60 md:text-6xl py-1"
 					style={{ animationDuration: "800ms", animationDelay: "100ms" }}>
-					Welcome back
+					{greeting}
 				</h1>
 
 				<p className="animate-fade-up text-lg text-base-content/60" style={{ animationDuration: "800ms", animationDelay: "200ms" }}>
