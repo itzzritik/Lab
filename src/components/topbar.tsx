@@ -10,12 +10,12 @@ export function Topbar() {
 	const { collapsed, toggle } = useSidebar();
 
 	return (
-		<header className="relative z-30 flex h-16 shrink-0 items-center justify-between border-b border-base-content/5 bg-base-100/60 px-6 backdrop-blur-md transition-all duration-300">
+		<header className="relative z-30 flex h-16 shrink-0 items-center justify-between border-base-content/5 border-b bg-base-100/60 px-6 backdrop-blur-md transition-all duration-300">
 			<div className="flex items-center gap-4">
 				<button
 					type="button"
 					onClick={toggle}
-					className="group flex h-10 w-10 items-center justify-center rounded-xl bg-base-200/50 text-base-content/60 shadow-sm backdrop-blur-md transition-all duration-300 hover:bg-base-200 hover:text-base-content hover:scale-105 active:scale-95">
+					className="group flex h-10 w-10 items-center justify-center rounded-xl bg-base-200/50 text-base-content/60 shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-base-200 hover:text-base-content active:scale-95">
 					<Icon code={collapsed ? "f0c9" : "f100"} type="solid" className="ico-4 transition-transform duration-300 group-hover:scale-110" />
 				</button>
 			</div>
@@ -50,20 +50,18 @@ function ThemePicker() {
 				<Icon code="f078" type="solid" className="ico-3 text-base-content/40 transition-transform duration-300 group-hover:text-base-content/70" />
 			</div>
 
-			<div
-				tabIndex={0}
-				className="dropdown-content z-[100] mt-4 w-64 origin-top-right rounded-3xl border border-base-content/5 bg-base-100/90 p-2 shadow-2xl backdrop-blur-2xl transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+			<div className="dropdown-content z-[100] mt-4 w-64 origin-top-right rounded-3xl border border-base-content/5 bg-base-100/90 p-2 shadow-2xl backdrop-blur-2xl transition-all duration-300 ease-spring">
 				<div className="mb-2 px-3 pt-2">
-					<span className="text-xs font-bold uppercase tracking-widest text-base-content/40">Select Theme</span>
+					<span className="font-bold text-base-content/40 text-xs uppercase tracking-widest">Select Theme</span>
 				</div>
-				<ul className="max-h-[min(60vh,300px)] overflow-y-auto overflow-x-hidden p-1 space-y-1">
+				<ul className="max-h-[min(60vh,300px)] space-y-1 overflow-y-auto overflow-x-hidden p-1">
 					{ALL_THEMES.map((t) => (
 						<li key={t}>
 							<button
 								type="button"
 								className={cn(
 									"group flex w-full items-center justify-between rounded-xl px-3 py-2 transition-all duration-300",
-									theme === t ? "bg-primary/10 text-primary" : "hover:bg-base-content/5 text-base-content/70 hover:text-base-content",
+									theme === t ? "bg-primary/10 text-primary" : "text-base-content/70 hover:bg-base-content/5 hover:text-base-content",
 								)}
 								onClick={() => {
 									setTheme(t);
@@ -80,10 +78,10 @@ function ThemePicker() {
 										<div className="size-1.5 rounded-full bg-secondary" />
 										<div className="size-1.5 rounded-full bg-accent" />
 									</div>
-									<span className={cn("text-sm font-medium capitalize", theme === t ? "font-bold" : "")}>{t}</span>
+									<span className={cn("font-medium text-sm capitalize", theme === t ? "font-bold" : "")}>{t}</span>
 								</div>
 								{theme === t && (
-									<div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-content shadow-sm scale-in-center">
+									<div className="flex h-5 w-5 animate-scale-in items-center justify-center rounded-full bg-primary text-primary-content shadow-sm">
 										<Icon code="f00c" type="solid" className="ico-[10]" />
 									</div>
 								)}

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import meta from "./meta.json";
 
 export const metadata: Metadata = {
-	title: `${meta.name} | Ritik's Lab`,
+	title: meta.name,
 	description: meta.description,
 };
 

@@ -23,7 +23,7 @@ export default function PolyrhythmPage() {
 
 			<div
 				className={cn(
-					"pointer-events-none absolute left-1/2 top-[30%] -translate-x-1/2 -translate-y-1/2 select-none rounded-full bg-neutral/80 px-6 py-3 text-sm text-neutral-content/50 transition-opacity dur-slow",
+					"dur-slow pointer-events-none absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 select-none rounded-full bg-neutral/80 px-6 py-3 text-neutral-content/50 text-sm transition-opacity",
 					soundEnabled ? "opacity-0" : "opacity-100",
 				)}>
 				Click anywhere to toggle sound

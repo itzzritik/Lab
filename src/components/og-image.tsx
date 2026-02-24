@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/a11y/noSvgWithoutTitle: We need it of OG */
+/** biome-ignore-all lint/a11y/noSvgWithoutTitle: OG image generation */
 
 import type { FC } from "react";
 import { OgBackground } from "./seo/OgBackground";
@@ -9,28 +9,29 @@ interface OGImageProps {
 	description: string;
 }
 
-const THEME_COLORS = [
-	{ h: 220, s: 90, l: 55 }, // Indigo (Lab default)
-	{ h: 326, s: 100, l: 74 }, // Pink (Dracula)
-	{ h: 141, s: 50, l: 60 }, // Emerald
-	{ h: 321, s: 70, l: 69 }, // Synthwave
-	{ h: 41, s: 74, l: 53 }, // Bumblebee
-	{ h: 183, s: 47, l: 59 }, // Cupcake
-	{ h: 3, s: 74, l: 76 }, // Retro
-	{ h: 259, s: 94, l: 51 }, // Light (Deep Purple)
-	{ h: 187, s: 85, l: 39 }, // Night
-	{ h: 344, s: 96, l: 28 }, // Autumn
-	{ h: 25, s: 95, l: 55 }, // Orange
+type HSL = { h: number; s: number; l: number };
+
+const DEFAULT_COLOR: HSL = { h: 220, s: 90, l: 55 };
+
+const THEME_COLORS: HSL[] = [
+	DEFAULT_COLOR,
+	{ h: 326, s: 100, l: 74 },
+	{ h: 141, s: 50, l: 60 },
+	{ h: 321, s: 70, l: 69 },
+	{ h: 41, s: 74, l: 53 },
+	{ h: 183, s: 47, l: 59 },
+	{ h: 3, s: 74, l: 76 },
+	{ h: 259, s: 94, l: 51 },
+	{ h: 187, s: 85, l: 39 },
+	{ h: 344, s: 96, l: 28 },
+	{ h: 25, s: 95, l: 55 },
 ];
 
-function getThemeColor(name: string): { h: number; s: number; l: number } {
-	if (name === "Ritik's Lab") return THEME_COLORS[0] as { h: number; s: number; l: number };
+function getThemeColor(name: string): HSL {
+	if (name === "Ritik's Lab") return DEFAULT_COLOR;
 	let hash = 0;
-	for (let i = 0; i < name.length; i++) {
-		hash = name.charCodeAt(i) + ((hash << 5) - hash);
-	}
-	const index = Math.abs(hash) % THEME_COLORS.length;
-	return (THEME_COLORS[index] || THEME_COLORS[0]) as { h: number; s: number; l: number };
+	for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+	return THEME_COLORS[Math.abs(hash) % THEME_COLORS.length] ?? DEFAULT_COLOR;
 }
 
 export const OGImage: FC<OGImageProps> = ({ pill, title, description }) => {
@@ -42,13 +43,13 @@ export const OGImage: FC<OGImageProps> = ({ pill, title, description }) => {
 				<div
 					style={{
 						padding: "10px 24px",
-						background: `linear-gradient(135deg, hsl(${theme.h}, ${theme.s}%, ${theme.l ?? 50}%) 0%, hsl(${(theme.h + 40) % 360}, ${theme.s}%, ${Math.max((theme.l ?? 50) - 15, 20)}%) 100%)`,
+						background: `linear-gradient(135deg, hsl(${theme.h}, ${theme.s}%, ${theme.l}%) 0%, hsl(${(theme.h + 40) % 360}, ${theme.s}%, ${Math.max(theme.l - 15, 20)}%) 100%)`,
 						borderRadius: "99px",
 						display: "flex",
 						alignItems: "center",
 						marginTop: "-75px",
 						marginBottom: "32px",
-						boxShadow: `0 8px 16px -4px hsla(${theme.h}, ${theme.s}%, ${theme.l ?? 50}%, 0.3)`,
+						boxShadow: `0 8px 16px -4px hsla(${theme.h}, ${theme.s}%, ${theme.l}%, 0.3)`,
 					}}>
 					<span style={{ fontSize: "16px", fontWeight: 700, color: "white", letterSpacing: "1.5px", textTransform: "uppercase" }}>{pill}</span>
 				</div>

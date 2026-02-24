@@ -22,7 +22,7 @@ type Shape = {
 };
 
 export function OgBackground({ children, themeColor }: { children?: React.ReactNode; themeColor?: ThemeColor }) {
-	const { h, s } = { h: 220, s: 90, ...themeColor }; // Defaulting to an Indigo/Blue hue appropriate for the Lab
+	const { h, s } = { h: 220, s: 90, ...themeColor };
 	const c = {
 		l: `hsl(${h},${s}%,75%)`,
 		p: `hsl(${h},${s}%,50%)`,

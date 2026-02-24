@@ -1,31 +1,16 @@
 import type { MetadataRoute } from "next";
 import { getExperiments } from "#utils/experiments";
+import { BASE_URL } from "#utils/helper";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-	const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://lab.ritik.me";
-	const experiments = getExperiments();
-
-	const staticRoutes = [
-		{
-			url: baseUrl,
+	return [
+		{ url: BASE_URL, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },
+		{ url: `${BASE_URL}/settings`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
+		...getExperiments().map((exp) => ({
+			url: `${BASE_URL}/${exp.slug}`,
 			lastModified: new Date(),
-			changeFrequency: "weekly" as const,
-			priority: 1,
-		},
-		{
-			url: `${baseUrl}/settings`,
-			lastModified: new Date(),
-			changeFrequency: "yearly" as const,
-			priority: 0.5,
-		},
+			changeFrequency: "monthly" as const,
+			priority: 0.8,
+		})),
 	];
-
-	const experimentRoutes = experiments.map((experiment) => ({
-		url: `${baseUrl}/${experiment.slug}`,
-		lastModified: new Date(),
-		changeFrequency: "monthly" as const,
-		priority: 0.8,
-	}));
-
-	return [...staticRoutes, ...experimentRoutes];
 }

@@ -5,14 +5,12 @@ export const displayFamily = Days_One({
 	weight: ["400"],
 	variable: "--display-family",
 	display: "swap",
-	preload: true,
 });
 
 export const textFamily = Outfit({
 	subsets: ["latin"],
 	variable: "--text-family",
 	display: "swap",
-	preload: true,
 });
 
 export const monoFamily = Space_Mono({
@@ -20,5 +18,4 @@ export const monoFamily = Space_Mono({
 	weight: ["400", "700"],
 	variable: "--mono-family",
 	display: "swap",
-	preload: true,
 });

@@ -3,12 +3,32 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Providers } from "#components/providers";
 import { displayFamily, monoFamily, textFamily } from "#utils/font";
+import { BASE_URL } from "#utils/helper";
 import "./globals.css";
 
+const description = "Interactive experiments & creative explorations in web development, creative coding, and generative art";
+
 export const metadata: Metadata = {
-	title: "Ritik's Lab",
-	description: "Interactive experiments & creative explorations",
-	metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://lab.ritik.me"),
+	title: { default: "Ritik's Lab", template: "%s | Ritik's Lab" },
+	description,
+	metadataBase: new URL(BASE_URL),
+	keywords: ["experiments", "creative coding", "web development", "generative art", "interactive", "visualization"],
+	authors: [{ name: "Ritik", url: BASE_URL }],
+	creator: "Ritik",
+	openGraph: {
+		type: "website",
+		locale: "en_US",
+		siteName: "Ritik's Lab",
+		title: "Ritik's Lab",
+		description,
+		url: BASE_URL,
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "Ritik's Lab",
+		description,
+	},
+	alternates: { canonical: BASE_URL },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
