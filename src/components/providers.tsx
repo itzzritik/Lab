@@ -36,6 +36,18 @@ export const ALL_THEMES = [...LIGHT_THEMES, ...DARK_THEMES] as const;
 
 export const FEATURED_THEMES = ["light", "dark", "nord", "black", "sunset"] as const;
 
+/* ── Sidebar ─────────────────────────────────────────── */
+
+type SidebarContextValue = { collapsed: boolean; toggle: () => void };
+const SidebarContext = createContext<SidebarContextValue>({ collapsed: false, toggle: () => {} });
+export const useSidebar = () => useContext(SidebarContext);
+
+function SidebarProvider({ children }: { children: ReactNode }) {
+	const [collapsed, setCollapsed] = useState(false);
+	const toggle = useCallback(() => setCollapsed((v) => !v), []);
+	return <SidebarContext value={{ collapsed, toggle }}>{children}</SidebarContext>;
+}
+
 /* ── Animation speed ─────────────────────────────────── */
 
 export const ANIMATION_SPEEDS = [
@@ -89,7 +101,9 @@ function AnimationProvider({ children }: { children: ReactNode }) {
 export function Providers({ children }: { children: ReactNode }) {
 	return (
 		<ThemeProvider attribute="data-theme" defaultTheme="black" themes={[...ALL_THEMES]}>
-			<AnimationProvider>{children}</AnimationProvider>
+			<AnimationProvider>
+				<SidebarProvider>{children}</SidebarProvider>
+			</AnimationProvider>
 		</ThemeProvider>
 	);
 }

@@ -39,7 +39,7 @@ export default function SettingsPage() {
 			<h1 className="mb-10 animate-fade-up font-display text-3xl font-bold tracking-tight">Settings</h1>
 
 			{/* ── Theme ─────────────────────────────────────── */}
-			<section className="mb-6 animate-fade-up overflow-hidden rounded-2xl border border-base-content/8 bg-base-100">
+			<section className="mb-6 animate-fade-up overflow-hidden rounded-2xl border border-base-content/8 bg-base-200">
 				<div className="flex items-center justify-between border-b border-base-content/8 px-6 py-4">
 					<div>
 						<h2 className="text-sm font-semibold text-base-content">Theme</h2>
@@ -53,7 +53,7 @@ export default function SettingsPage() {
 								onClick={() => setThemeTab(tab.id)}
 								className={cn(
 									"rounded-md px-3 py-1 text-xs font-medium transition-all dur-fast",
-									themeTab === tab.id ? "bg-base-100 text-base-content shadow-sm" : "text-base-content/50 hover:text-base-content/80",
+									themeTab === tab.id ? "bg-base-300 text-base-content shadow-sm" : "text-base-content/50 hover:text-base-content/80",
 								)}>
 								{tab.label}
 							</button>
@@ -69,7 +69,7 @@ export default function SettingsPage() {
 			</section>
 
 			{/* ── Animation Speed ───────────────────────────── */}
-			<section className="animate-fade-up overflow-hidden rounded-2xl border border-base-content/8 bg-base-100" style={{ animationDelay: "80ms" }}>
+			<section className="animate-fade-up overflow-hidden rounded-2xl border border-base-content/8 bg-base-200" style={{ animationDelay: "80ms" }}>
 				<div className="border-b border-base-content/8 px-6 py-4">
 					<h2 className="text-sm font-semibold text-base-content">Animation Speed</h2>
 					<p className="text-xs text-base-content/50">Control transition & animation pace</p>
@@ -129,7 +129,7 @@ function AnimationPreview({ speed }: { speed: AnimationSpeed }) {
 	};
 
 	return (
-		<div className="relative flex items-center justify-center overflow-hidden rounded-xl border border-base-content/10 bg-base-200/50">
+		<div className="relative flex items-center justify-center overflow-hidden rounded-xl border border-base-content/10 bg-base-300/50">
 			{/* Grid pattern */}
 			<div
 				className="pointer-events-none absolute inset-0 opacity-30"
@@ -160,7 +160,7 @@ function AnimationPreview({ speed }: { speed: AnimationSpeed }) {
 				{/* Middle card */}
 				<div
 					className={cn(
-						"pointer-events-none absolute inset-0 rounded-xl border border-base-content/10 bg-base-100/80 shadow-sm transition-all ease-out",
+						"pointer-events-none absolute inset-0 rounded-xl border border-base-content/10 bg-base-200/80 shadow-sm transition-all ease-out",
 						"translate-y-1.5 rotate-[-2.5deg] scale-95",
 						"group-hover:-translate-x-2 group-hover:translate-y-0.5 group-hover:rotate-[-5deg] group-hover:shadow-md",
 						"group-active:translate-x-0 group-active:translate-y-0.5 group-active:rotate-0 group-active:scale-95",
@@ -171,7 +171,7 @@ function AnimationPreview({ speed }: { speed: AnimationSpeed }) {
 				{/* Front card */}
 				<div
 					className={cn(
-						"relative z-10 flex h-full w-full flex-col items-center justify-center gap-2 rounded-xl border border-base-content/10 bg-base-100 shadow-lg transition-all ease-out",
+						"relative z-10 flex h-full w-full flex-col items-center justify-center gap-2 rounded-xl border border-base-content/10 bg-base-200 shadow-lg transition-all ease-out",
 						"group-hover:-translate-y-1 group-hover:border-primary/20 group-hover:shadow-xl",
 						"group-active:translate-y-0.5 group-active:scale-[0.98] group-active:shadow-sm",
 						clicked && "border-primary ring-4 ring-primary/10",
@@ -179,7 +179,7 @@ function AnimationPreview({ speed }: { speed: AnimationSpeed }) {
 					style={{ transitionDuration: "var(--dur)" }}>
 					<div
 						className={cn(
-							"flex h-9 w-9 items-center justify-center rounded-lg bg-base-200 transition-all",
+							"flex h-9 w-9 items-center justify-center rounded-lg bg-base-300 transition-all",
 							"group-hover:scale-110 group-hover:bg-primary/10",
 							"group-active:scale-90 group-active:bg-primary/20",
 							clicked && "bg-success/10",
@@ -228,7 +228,7 @@ function ThemeCard({ name, active, onSelect }: { name: string; active: boolean; 
 			onClick={onSelect}
 			data-theme={name}
 			className={cn(
-				"group relative flex cursor-pointer flex-col overflow-hidden rounded-xl border-2 bg-base-100 transition-all dur",
+				"group relative flex cursor-pointer flex-col overflow-hidden rounded-xl border-2 bg-base-200 transition-all dur",
 				active ? "border-primary shadow-md ring-2 ring-primary/20" : "border-base-content/15 hover:border-base-content/25 hover:shadow-sm",
 			)}>
 			{active && (

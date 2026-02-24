@@ -17,7 +17,7 @@ export default function HomePage() {
 
 			{/* Stats */}
 			<div className="mb-10 animate-fade-up grid grid-cols-2 gap-4 sm:grid-cols-4" style={{ animationDelay: "60ms" }}>
-				<div className="flex items-center gap-4 rounded-xl border border-base-content/10 bg-base-100 p-4">
+				<div className="flex items-center gap-4 rounded-xl border border-base-content/10 bg-base-200 p-4">
 					<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
 						<Icon code="f0c3" type="solid" className="ico-4 text-primary" />
 					</div>
@@ -38,7 +38,7 @@ export default function HomePage() {
 					<Link
 						key={exp.slug}
 						href={`/${exp.slug}`}
-						className="group animate-fade-up flex gap-4 rounded-xl border border-base-content/10 bg-base-100 p-5 transition-all dur hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-lg"
+						className="group animate-fade-up flex gap-4 rounded-xl border border-base-content/10 bg-base-200 p-5 transition-all dur hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-lg"
 						style={{ animationDelay: `${180 + i * 80}ms` }}>
 						<div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 transition-colors dur group-hover:bg-primary/15">
 							<Icon code={exp.icon} type="solid" className="ico-5 text-primary" />

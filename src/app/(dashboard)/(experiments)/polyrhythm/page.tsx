@@ -16,7 +16,7 @@ export default function PolyrhythmPage() {
 	const toggleSound = useCallback(() => setSoundEnabled((v) => !v), []);
 
 	return (
-		<div className="relative h-full overflow-hidden bg-black">
+		<div className="relative h-full overflow-hidden">
 			<canvas ref={canvasRef} className="h-full w-full cursor-pointer" onClick={toggleSound} />
 
 			<Controls soundEnabled={soundEnabled} instrument={instrument} onToggleSound={toggleSound} onInstrumentChange={setInstrument} />

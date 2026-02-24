@@ -20,11 +20,14 @@ const INSTRUMENT_ICONS: Record<Instrument, string> = {
 
 export function Controls({ soundEnabled, instrument, onToggleSound, onInstrumentChange }: Props) {
 	return (
-		<div className="fab absolute! bottom-8 right-8 z-10 group/fab">
+		<div className="fab absolute! bottom-8 right-8 z-10">
 			{/* Main trigger — sound toggle */}
 			<button
 				type="button"
-				onClick={onToggleSound}
+				onClick={(e) => {
+					onToggleSound();
+					if (soundEnabled) (e.currentTarget as HTMLElement).blur();
+				}}
 				className={cn(
 					"btn btn-circle btn-lg shadow-lg transition-all dur-fast hover:scale-110",
 					soundEnabled
@@ -34,9 +37,9 @@ export function Controls({ soundEnabled, instrument, onToggleSound, onInstrument
 				<Icon code={soundEnabled ? "f028" : "f6a9"} type="solid" className="ico-4" />
 			</button>
 
-			{/* Speed dial — instrument selectors */}
+			{/* Speed dial — instrument selectors (visible only when sound is on) */}
 			{INSTRUMENTS.map((inst) => (
-				<div key={inst} className="group-hover/fab:scale-100! group-hover/fab:opacity-100! group-hover/fab:visible!">
+				<div key={inst} className={cn("transition-all dur-fast", soundEnabled ? "visible! scale-100! opacity-100!" : "")}>
 					<span
 						className={cn(
 							"rounded-lg px-3 py-1.5 text-xs font-semibold capitalize shadow-lg transition-all dur-fast",

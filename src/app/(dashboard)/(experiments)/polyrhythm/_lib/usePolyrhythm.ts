@@ -16,8 +16,95 @@ const VOICES: Record<Instrument, { type: OscillatorType; freq: (i: number) => nu
 type Ripple = { x: number; y: number; t: number; idx: number };
 
 const vel = (i: number) => ((MAX_CYCLES - i) * 2 * Math.PI) / DURATION;
-const arcHue = (i: number) => 30 + (i / (N - 1)) * 250;
-const hsla = (h: number, s: number, l: number, a: number) => `hsla(${h},${s}%,${l}%,${a})`;
+
+type RGB = [number, number, number];
+
+/** Sample a DaisyUI color class via pixel readback — guaranteed correct RGB. */
+const sampleClass = (cls: string): RGB => {
+	const el = document.createElement("div");
+	el.className = cls;
+	el.style.cssText = "position:fixed;width:1px;height:1px;pointer-events:none;opacity:0";
+	document.body.appendChild(el);
+	const bg = getComputedStyle(el).backgroundColor;
+	el.remove();
+	const c = document.createElement("canvas");
+	c.width = c.height = 1;
+	const ctx = c.getContext("2d", { willReadFrequently: true });
+	if (!ctx) return [128, 128, 128] as RGB;
+	ctx.fillStyle = bg;
+	ctx.fillRect(0, 0, 1, 1);
+	const d = ctx.getImageData(0, 0, 1, 1).data;
+	return [d[0] ?? 128, d[1] ?? 128, d[2] ?? 128];
+};
+
+type HSL = [number, number, number];
+
+const rgbToHsl = (c: RGB): HSL => {
+	const r = c[0] / 255,
+		g = c[1] / 255,
+		b = c[2] / 255;
+	const max = Math.max(r, g, b),
+		min = Math.min(r, g, b);
+	const l = (max + min) / 2;
+	if (max === min) return [0, 0, l];
+	const d = max - min;
+	const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+	let h = 0;
+	if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+	else if (max === g) h = ((b - r) / d + 2) / 6;
+	else h = ((r - g) / d + 4) / 6;
+	return [h, s, l];
+};
+
+const hslToRgb = (h: number, s: number, l: number): RGB => {
+	if (s === 0) {
+		const v = Math.round(l * 255);
+		return [v, v, v];
+	}
+	const hue2rgb = (p: number, q: number, t: number) => {
+		const tt = t < 0 ? t + 1 : t > 1 ? t - 1 : t;
+		if (tt < 1 / 6) return p + (q - p) * 6 * tt;
+		if (tt < 1 / 2) return q;
+		if (tt < 2 / 3) return p + (q - p) * (2 / 3 - tt) * 6;
+		return p;
+	};
+	const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+	const p = 2 * l - q;
+	return [Math.round(hue2rgb(p, q, h + 1 / 3) * 255), Math.round(hue2rgb(p, q, h) * 255), Math.round(hue2rgb(p, q, h - 1 / 3) * 255)];
+};
+
+const rgba = (c: RGB, a: number) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+
+/** Interpolate hue between two angles via the shortest arc. */
+const lerpHue = (a: number, b: number, t: number) => {
+	let d = b - a;
+	if (d > 0.5) d -= 1;
+	if (d < -0.5) d += 1;
+	return ((a + d * t) % 1 + 1) % 1;
+};
+
+/** Build a 21-color palette interpolating primary → secondary in HSL,
+ *  with lightness guaranteed to contrast well against bg-base-100. */
+const buildPalette = (): RGB[] => {
+	const primary = sampleClass("bg-primary");
+	const secondary = sampleClass("bg-secondary");
+	const bg = sampleClass("bg-base-100");
+	const hslA = rgbToHsl(primary);
+	const hslB = rgbToHsl(secondary);
+	const bgL = rgbToHsl(bg)[2];
+
+	// Ensure palette lightness contrasts against background:
+	// dark bg → push lightness high; light bg → push lightness low
+	const brightL = Math.max(hslA[2], hslB[2]);
+	const targetL = bgL < 0.5 ? Math.max(brightL, 0.65) : Math.min(brightL, 0.35);
+
+	return Array.from({ length: N }, (_, i) => {
+		const t = i / (N - 1);
+		const h = lerpHue(hslA[0], hslB[0], t);
+		const s = hslA[1] + (hslB[1] - hslA[1]) * t;
+		return hslToRgb(h, s, targetL);
+	});
+};
 
 export function usePolyrhythm(
 	ref: React.RefObject<HTMLCanvasElement | null>,
@@ -31,6 +118,13 @@ export function usePolyrhythm(
 		const canvas = ref.current;
 		const ctx = canvas?.getContext("2d");
 		if (!canvas || !ctx) return;
+
+		// ── Theme palette: smooth gradient across primary → secondary → accent ──
+		let palette = buildPalette();
+		const observer = new MutationObserver(() => {
+			palette = buildPalette();
+		});
+		observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
 		const t0 = Date.now();
 		const arcs = Array.from({ length: N }, (_, i) => {
@@ -100,42 +194,33 @@ export function usePolyrhythm(
 			const r0 = sz * 0.05;
 			const dotR = sz * 0.006;
 			const sp = (sz / 2 - r0 - sz * 0.02) / N;
+			const pal = palette;
+			const fallbackColor: RGB = [128, 128, 128];
 
-			// ── Background ──
-			ctx.fillStyle = "#08080f";
-			ctx.fillRect(0, 0, w, h);
-
-			const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, sz * 0.55);
-			glow.addColorStop(0, "rgba(40,20,60,0.25)");
-			glow.addColorStop(0.5, "rgba(20,12,35,0.12)");
-			glow.addColorStop(1, "transparent");
-			ctx.fillStyle = glow;
-			ctx.fillRect(0, 0, w, h);
-
+			ctx.clearRect(0, 0, w, h);
 			ctx.lineCap = "round";
 
 			// ── Arcs ──
 			for (let i = 0; i < N; i++) {
 				const arc = arcs[i];
 				if (!arc) continue;
+				const c = pal[i] ?? fallbackColor;
 				const r = r0 + sp * i;
-				const hue = arcHue(i);
 				const fade = Math.min((now - arc.last) / 800, 1);
 				const gap = (dotR * 4) / r;
 
-				// Semicircles
+				// Ring arcs — lighter shade
 				ctx.lineWidth = sz * 0.0015;
-				ctx.strokeStyle = hsla(hue, 70, 65, 0.1 + 0.35 * (1 - fade));
+				ctx.strokeStyle = rgba(c, 0.25 + 0.2 * (1 - fade));
 				for (const off of [Math.PI, 0]) {
 					ctx.beginPath();
 					ctx.arc(cx, cy, r, off + gap, off + Math.PI - gap);
 					ctx.stroke();
 				}
 
-				// Endpoints
-				const endAlpha = 0.2 + 0.6 * (1 - fade);
+				// Endpoints — medium shade
 				const endR = dotR * (0.5 + 0.7 * (1 - fade));
-				ctx.fillStyle = hsla(hue, 70, 70, endAlpha);
+				ctx.fillStyle = rgba(c, 0.35 + 0.25 * (1 - fade));
 				for (const a of [0, Math.PI]) {
 					ctx.beginPath();
 					ctx.arc(cx + r * Math.cos(a), cy + r * Math.sin(a), endR, 0, 2 * Math.PI);
@@ -152,17 +237,17 @@ export function usePolyrhythm(
 					ripples.push({ x: cx + r * Math.cos(side), y: cy + r * Math.sin(side), t: now, idx: i });
 				}
 
-				// Moving dot with glow
+				// Moving dot — full base color with glow
 				ctx.shadowBlur = 10;
-				ctx.shadowColor = hsla(hue, 80, 65, 0.5);
-				ctx.fillStyle = hsla(hue, 75, 72, 1);
+				ctx.shadowColor = rgba(c, 0.5);
+				ctx.fillStyle = rgba(c, 0.9);
 				ctx.beginPath();
 				ctx.arc(cx + r * Math.cos(angle), cy + r * Math.sin(angle), dotR, 0, 2 * Math.PI);
 				ctx.fill();
 				ctx.shadowBlur = 0;
 			}
 
-			// ── Ripples ──
+			// ── Ripples — each uses its ring's palette color ──
 			for (let j = ripples.length - 1; j >= 0; j--) {
 				const rip = ripples[j];
 				if (!rip) continue;
@@ -171,12 +256,12 @@ export function usePolyrhythm(
 					ripples.splice(j, 1);
 					continue;
 				}
-				const hue = arcHue(rip.idx);
+				const c = pal[rip.idx] ?? fallbackColor;
 				const ease = 1 - age;
-				ctx.strokeStyle = hsla(hue, 70, 70, 0.5 * ease);
+				ctx.strokeStyle = rgba(c, 0.6 * ease);
 				ctx.lineWidth = sz * 0.002 * ease;
 				ctx.shadowBlur = 12 * ease;
-				ctx.shadowColor = hsla(hue, 80, 65, 0.3);
+				ctx.shadowColor = rgba(c, 0.3);
 				ctx.beginPath();
 				ctx.arc(rip.x, rip.y, dotR + age * sz * 0.018, 0, 2 * Math.PI);
 				ctx.stroke();
@@ -187,7 +272,10 @@ export function usePolyrhythm(
 		};
 
 		raf = requestAnimationFrame(draw);
-		return () => cancelAnimationFrame(raf);
+		return () => {
+			cancelAnimationFrame(raf);
+			observer.disconnect();
+		};
 	}, [ref]);
 
 	useEffect(() => () => void audioRef.current?.close(), []);
