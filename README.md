@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# Ritik's Lab
 
-First, run the development server:
+**A curated collection of interactive web experiments, creative visualizations, and generative art built with modern web technologies.**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+An ever-growing playground where ideas come to life through code.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[![Live Site](https://img.shields.io/badge/lab.ritik.me-Visit%20Live%20Site-4f46e5?style=for-the-badge&logo=vercel&logoColor=white)](https://lab.ritik.me)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+[![Next.js](https://img.shields.io/badge/Next.js_16-000?style=flat-square&logo=nextdotjs)](https://nextjs.org)
+[![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=000)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![DaisyUI](https://img.shields.io/badge/DaisyUI_5-5A0EF8?style=flat-square&logo=daisyui&logoColor=white)](https://daisyui.com)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+</div>
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## About
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Ritik's Lab** is a personal laboratory for interactive web experiments and creative coding explorations. Each experiment is a self-contained, fully interactive piece that runs directly in the browser - no installs, no dependencies, just open and play.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The lab is designed as a living collection that keeps growing over time. New experiments are added regularly across a wide range of topics. The entire platform is built around a convention-based architecture - creating a new experiment is as simple as dropping a folder into the experiments directory. It auto-registers in the sidebar, home grid, and routing without touching a single config file.
 
-## Deploy on Vercel
+### Highlights
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **34+ themes** - every experiment adapts to your chosen theme in real time, powered by DaisyUI's theme engine
+- **Configurable animation speeds** - choose between instant, swift, smooth, or gentle transitions globally across the UI
+- **Fully responsive** - the dashboard, sidebar, and every experiment work seamlessly across desktop, tablet, and mobile
+- **Native browser APIs** - all visualizations are built on top of Canvas, Web Audio, and other standard web APIs with zero external runtime overhead
+- **Auto-discovery** - drop a new folder into the experiments directory with a `page.tsx` and an optional `meta.json`, and it appears everywhere automatically
+- **Persistent preferences** - theme selection and animation speed are saved to local storage and restored on revisit
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Experiments
+
+<!-- ┌──────────────────────────────────────────────────────┐ -->
+<!-- │  Experiments are listed below. Each entry includes   │ -->
+<!-- │  a brief description and a live demo badge.          │ -->
+<!-- └──────────────────────────────────────────────────────┘ -->
+
+### Polyrhythm
+
+A mesmerizing **polyrhythmic metronome visualization** rendered on HTML Canvas. 21 concentric arcs rotate at mathematically related speeds, producing a hypnotic visual pattern. Toggle sound to hear each arc produce a tone when it hits an endpoint - choose between **sine**, **bell**, and **sawtooth wave** instruments. The colors adapt dynamically to the active DaisyUI theme using a primary-to-secondary HSL gradient.
+
+**Concepts:** Canvas 2D rendering &bull; Web Audio API &bull; oscillator synthesis &bull; polyrhythmic timing &bull; HSL color interpolation &bull; theme-reactive palettes
+
+[![Open Polyrhythm](https://img.shields.io/badge/▶%20Open%20Live%20Demo-4f46e5?style=for-the-badge)](https://lab.ritik.me/polyrhythm)
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Framework** | [Next.js 16](https://nextjs.org) (App Router) |
+| **UI Library** | [React 19](https://react.dev) |
+| **Language** | [TypeScript 5](https://typescriptlang.org) |
+| **Styling** | [Tailwind CSS 4](https://tailwindcss.com) + [DaisyUI 5](https://daisyui.com) |
+| **Fonts** | Days One (display) &bull; Outfit (body) &bull; Space Mono (monospace) |
+| **Icons** | [Gliff](https://www.npmjs.com/package/gliff) (Font Awesome unicode icons) |
+| **Linting** | [Biome 2](https://biomejs.dev) |
+| **Package Manager** | [pnpm](https://pnpm.io) |

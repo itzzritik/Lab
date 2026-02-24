@@ -2,6 +2,18 @@
 	"name": "lab",
 	"version": "0.1.0",
 	"private": true,
+	"description": "A curated collection of interactive web experiments, creative visualizations, and generative art built with modern web technologies",
+	"keywords": [
+		"web-experiments",
+		"creative-coding",
+		"interactive-visualizations",
+		"creative-lab",
+		"nextjs",
+		"react",
+		"typescript",
+		"tailwindcss",
+		"daisyui"
+	],
 	"scripts": {
 		"dev": "PORT=3010 next dev",
 		"build": "next build",
