@@ -7,10 +7,10 @@ const N = 21;
 const DURATION = 900;
 const MAX_CYCLES = 100;
 
-const FREQ: Record<Instrument, (i: number) => number> = {
-	sine: (i) => 220 * 2 ** ((i * 2) / 12),
-	bell: (i) => 262 * 2 ** ((i * 1.5) / 12),
-	wave: (i) => 174 * 2 ** ((i * 2.5) / 12),
+const VOICES: Record<Instrument, { type: OscillatorType; freq: (i: number) => number }> = {
+	sine: { type: "sine", freq: (i) => 220 * 2 ** ((i * 2) / 12) },
+	bell: { type: "triangle", freq: (i) => 262 * 2 ** ((i * 1.5) / 12) },
+	wave: { type: "sawtooth", freq: (i) => 174 * 2 ** ((i * 2.5) / 12) },
 };
 
 type Ripple = { x: number; y: number; t: number; idx: number };
@@ -41,11 +41,13 @@ export function usePolyrhythm(
 
 		const tone = (i: number) => {
 			if (!optsRef.current.soundEnabled || document.hidden) return;
-			const ac = (audioRef.current ??= new AudioContext());
+			if (!audioRef.current) audioRef.current = new AudioContext();
+			const ac = audioRef.current;
+			const voice = VOICES[optsRef.current.instrument];
 			const osc = ac.createOscillator();
 			const gain = ac.createGain();
-			osc.type = "sine";
-			osc.frequency.value = FREQ[optsRef.current.instrument](i);
+			osc.type = voice.type;
+			osc.frequency.value = voice.freq(i);
 			gain.gain.setValueAtTime(0.06, ac.currentTime);
 			gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.6);
 			osc.connect(gain).connect(ac.destination);

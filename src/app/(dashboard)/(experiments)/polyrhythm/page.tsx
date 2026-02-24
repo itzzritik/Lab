@@ -9,7 +9,7 @@ import { usePolyrhythm } from "./_lib/usePolyrhythm";
 export default function PolyrhythmPage() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [soundEnabled, setSoundEnabled] = useState(false);
-	const [instrument, setInstrument] = useState<Instrument>("vibraphone");
+	const [instrument, setInstrument] = useState<Instrument>("sine");
 
 	usePolyrhythm(canvasRef, { soundEnabled, instrument });
 
