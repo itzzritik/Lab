@@ -10,30 +10,34 @@ import { cn } from "#utils/helper";
 
 export function Sidebar({ experiments }: { experiments: Experiment[] }) {
 	const pathname = usePathname();
-	const { collapsed, toggle } = useSidebar();
+	const { collapsed, toggle, setCollapsed } = useSidebar();
 	const [mounted, setMounted] = useState(false);
 
-	const sidebarRef = useRef({ collapsed, toggle });
-	sidebarRef.current = { collapsed, toggle };
+	const sidebarRef = useRef({ collapsed, toggle, setCollapsed });
+	sidebarRef.current = { collapsed, toggle, setCollapsed };
 
 	useEffect(() => setMounted(true), []);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: intentionally re-run on route change
 	useEffect(() => {
-		const { collapsed: c, toggle: t } = sidebarRef.current;
-		if (window.innerWidth < 768 && !c) t();
+		const { collapsed: c, setCollapsed: s } = sidebarRef.current;
+		if (window.innerWidth < 768 && c === false) s(true);
 	}, [pathname]);
+
+	const isDesktopCollapsed = collapsed === true;
+	const isMobileOpen = collapsed === false;
 
 	return (
 		<>
-			{!collapsed && <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden" onClick={toggle} />}
+			{isMobileOpen && <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden" onClick={toggle} />}
 
 			<aside
 				className={cn(
 					"relative z-50 flex flex-col bg-base-200/80 backdrop-blur-2xl transition-all duration-500 ease-spring",
 					"border-base-content/5 border-r",
 					"max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:w-[280px] max-md:shadow-2xl",
-					collapsed ? "max-md:-translate-x-full md:w-[72px]" : "max-md:translate-x-0 md:w-[280px]",
+					isDesktopCollapsed ? "md:w-[72px]" : "md:w-[280px]",
+					isMobileOpen ? "max-md:translate-x-0" : "max-md:-translate-x-full",
 					"md:shrink-0",
 				)}>
 				<div className="flex h-16 shrink-0 items-center px-4">
@@ -44,7 +48,7 @@ export function Sidebar({ experiments }: { experiments: Experiment[] }) {
 						className={cn(
 							"overflow-hidden whitespace-nowrap transition-all duration-500 ease-spring",
 							"max-md:ml-3 max-md:w-full max-md:opacity-100",
-							collapsed ? "md:w-0 md:opacity-0" : "md:ml-3 md:w-full md:opacity-100",
+							isDesktopCollapsed ? "md:w-0 md:opacity-0" : "md:ml-3 md:w-full md:opacity-100",
 						)}>
 						<span className="bg-gradient-to-r from-base-content to-base-content/60 bg-clip-text font-black font-display text-lg text-transparent tracking-tight">
 							Ritik's Lab
@@ -63,18 +67,18 @@ export function Sidebar({ experiments }: { experiments: Experiment[] }) {
 					className={cn(
 						"flex-1 space-y-1.5 overflow-x-hidden px-3 py-4",
 						"max-md:overflow-y-auto",
-						collapsed ? "md:overflow-visible" : "md:overflow-y-auto",
+						isDesktopCollapsed ? "md:overflow-visible" : "md:overflow-y-auto",
 						mounted ? "" : "opacity-0",
 					)}>
 					<div className="animate-fade-up" style={{ animationDelay: "100ms" }}>
-						<NavItem href="/" icon="f015" label="Home" active={pathname === "/"} collapsed={collapsed} />
+						<NavItem href="/" icon="f015" label="Home" active={pathname === "/"} collapsed={isDesktopCollapsed} />
 					</div>
 
 					<div
 						className={cn(
 							"overflow-hidden transition-all duration-500 ease-spring",
 							"max-md:max-h-12 max-md:opacity-100",
-							collapsed ? "md:max-h-0 md:opacity-0" : "md:max-h-12 md:opacity-100",
+							isDesktopCollapsed ? "md:max-h-0 md:opacity-0" : "md:max-h-12 md:opacity-100",
 						)}>
 						<div className="flex items-center gap-3 px-3 pt-6 pb-2">
 							<span className="whitespace-nowrap font-bold text-[0.65rem] text-base-content/40 uppercase tracking-[0.25em]">Experiments</span>
@@ -85,14 +89,14 @@ export function Sidebar({ experiments }: { experiments: Experiment[] }) {
 						className={cn(
 							"overflow-hidden transition-all duration-500 ease-spring",
 							"max-md:max-h-0 max-md:opacity-0",
-							collapsed ? "md:max-h-6 md:py-3 md:opacity-100" : "md:max-h-0 md:opacity-0",
+							isDesktopCollapsed ? "md:max-h-6 md:py-3 md:opacity-100" : "md:max-h-0 md:opacity-0",
 						)}>
 						<div className="mx-auto w-6 rounded-full border-base-content/10 border-t-2" />
 					</div>
 
 					{experiments.map((exp, idx) => (
 						<div key={exp.slug} className="animate-fade-up" style={{ animationDelay: `${200 + idx * 50}ms` }}>
-							<NavItem href={`/${exp.slug}`} icon={exp.icon} label={exp.name} active={pathname === `/${exp.slug}`} collapsed={collapsed} />
+							<NavItem href={`/${exp.slug}`} icon={exp.icon} label={exp.name} active={pathname === `/${exp.slug}`} collapsed={isDesktopCollapsed} />
 						</div>
 					))}
 
@@ -101,7 +105,7 @@ export function Sidebar({ experiments }: { experiments: Experiment[] }) {
 							className={cn(
 								"overflow-hidden whitespace-nowrap transition-all duration-500",
 								"max-md:max-h-12 max-md:px-4 max-md:py-3 max-md:opacity-100",
-								collapsed ? "md:max-h-0 md:opacity-0" : "md:max-h-12 md:px-4 md:py-3 md:opacity-100",
+								isDesktopCollapsed ? "md:max-h-0 md:opacity-0" : "md:max-h-12 md:px-4 md:py-3 md:opacity-100",
 							)}>
 							<div className="flex items-center gap-3 rounded-xl border border-base-content/10 border-dashed bg-base-100/50 px-4 py-3 text-[0.75rem] text-base-content/40">
 								<Icon code="f071" type="solid" className="ico-3" />
@@ -113,7 +117,7 @@ export function Sidebar({ experiments }: { experiments: Experiment[] }) {
 
 				<div className="shrink-0 p-3 pb-4">
 					<div className="animate-fade-up" style={{ animationDelay: `${300 + experiments.length * 50}ms` }}>
-						<NavItem href="/settings" icon="f013" label="Settings" active={pathname === "/settings"} collapsed={collapsed} />
+						<NavItem href="/settings" icon="f013" label="Settings" active={pathname === "/settings"} collapsed={isDesktopCollapsed} />
 					</div>
 				</div>
 			</aside>

@@ -46,14 +46,30 @@ export const DARK_THEMES = [
 
 export const ALL_THEMES = [...LIGHT_THEMES, ...DARK_THEMES] as const;
 
-type SidebarContextValue = { collapsed: boolean; toggle: () => void };
-const SidebarContext = createContext<SidebarContextValue>({ collapsed: false, toggle: () => {} });
+type SidebarContextValue = { collapsed: boolean | undefined; setCollapsed: (val: boolean) => void; toggle: () => void };
+const SidebarContext = createContext<SidebarContextValue>({ collapsed: undefined, setCollapsed: () => {}, toggle: () => {} });
 export const useSidebar = () => useContext(SidebarContext);
 
 function SidebarProvider({ children }: { children: ReactNode }) {
-	const [collapsed, setCollapsed] = useState(true);
-	const toggle = useCallback(() => setCollapsed((v) => !v), []);
-	return <SidebarContext value={{ collapsed, toggle }}>{children}</SidebarContext>;
+	const [collapsed, setCollapsed] = useState<boolean | undefined>(undefined);
+
+	useEffect(() => {
+		if (collapsed === undefined) {
+			setCollapsed(window.innerWidth < 768);
+		}
+	}, [collapsed]);
+
+	const toggle = useCallback(
+		() =>
+			setCollapsed((v) => {
+				if (v === undefined) return window.innerWidth >= 768;
+
+				return !v;
+			}),
+		[],
+	);
+
+	return <SidebarContext value={{ collapsed, toggle, setCollapsed }}>{children}</SidebarContext>;
 }
 
 export const ANIMATION_SPEEDS = [
