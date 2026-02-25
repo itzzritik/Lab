@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+const description = "Customize your workspace appearance and animation speed";
+
 export const metadata: Metadata = {
 	title: "Settings",
-	description: "Customize your workspace appearance and animation speed",
+	description,
 	alternates: { canonical: "/settings" },
-	openGraph: { url: "/settings" },
+	openGraph: { title: "Settings", description, url: "/settings" },
 	robots: { index: false, follow: false },
 };
 

@@ -41,6 +41,6 @@ export function getExperimentMetadata(meta: { name: string; description: string 
 		title: meta.name,
 		description: meta.description,
 		alternates: { canonical: `/${slug}` },
-		openGraph: { url: `/${slug}` },
+		openGraph: { title: meta.name, description: meta.description, url: `/${slug}` },
 	};
 }

@@ -3,11 +3,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getExperiments } from "#utils/experiments";
 
+const description = "Interactive playground for creative coding, experiments, and web innovation";
+
 export const metadata: Metadata = {
 	title: "Home",
-	description: "Interactive playground for creative coding, experiments, and web innovation",
+	description,
 	alternates: { canonical: "/" },
-	openGraph: { url: "/" },
+	openGraph: { title: "Home", description, url: "/" },
 };
 
 const GREETINGS = ["Welcome to the lab", "Let's cook.", "Break things beautifully.", "Where ideas mutate.", "Tinker. Break. Ship.", "What's brewing?"];
