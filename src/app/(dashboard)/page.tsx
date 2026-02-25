@@ -17,14 +17,16 @@ export default async function HomePage() {
 	const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
 	const greeting = GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
 
-	let projectsData: ProjectApiRes | null = null;
+	let projects: { name: string; url: string }[] = [];
 	try {
 		const res = await fetch(VERCEL_PROJECTS_API_URL);
 		if (res.ok) {
-			projectsData = await res.json();
-			if (projectsData) {
-				projectsData.reservedSubdomains = projectsData.reservedSubdomains.filter((subdomain) => subdomain !== "lab");
-			}
+			const projectsData: ProjectApiRes = await res.json();
+			projects = projectsData.projects.flatMap((project) => {
+				const domain = project.domains.find((d) => d.name.includes(projectsData.domain));
+				if (!domain || project.name === "lab") return [];
+				return { name: project.name.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()), url: `https://${domain.name}` };
+			});
 		}
 	} catch (error) {
 		console.error("Failed to fetch projects:", error);
@@ -50,7 +52,7 @@ export default async function HomePage() {
 				</p>
 			</div>
 
-			<DashboardClient experiments={experiments} projectsData={projectsData} />
+			<DashboardClient experiments={experiments} projects={projects} />
 		</div>
 	);
 }

@@ -7,10 +7,10 @@ import type { Experiment } from "#utils/experiments";
 
 export type ProjectApiRes = {
 	domain: string;
-	reservedSubdomains: string[];
+	projects: { name: string; domains: { name: string }[] }[];
 };
 
-export function DashboardClient({ experiments, projectsData }: { experiments: Experiment[]; projectsData: ProjectApiRes | null }) {
+export function DashboardClient({ experiments, projects }: { experiments: Experiment[]; projects: { name: string; url: string }[] }) {
 	const [activeTab, setActiveTab] = useState<"experiments" | "projects">("experiments");
 
 	return (
@@ -19,9 +19,9 @@ export function DashboardClient({ experiments, projectsData }: { experiments: Ex
 			<button
 				type="button"
 				onClick={() => setActiveTab("experiments")}
-				className={`group/section text-left relative animate-fade-up overflow-hidden rounded-4xl border ${
+				className={`group/section relative animate-fade-up overflow-hidden rounded-4xl border text-left ${
 					activeTab === "experiments" ? "border-primary/30 ring-1 ring-primary/20" : "border-base-content/5 hover:border-base-content/10"
-				} bg-base-200/50 p-6 shadow-sm backdrop-blur-xl sm:p-8 lg:col-span-6 transition-all duration-300`}
+				} bg-base-200/50 p-6 shadow-sm backdrop-blur-xl transition-all duration-300 sm:p-8 lg:col-span-6`}
 				style={{ animationDelay: "300ms" }}>
 				<div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover/section:opacity-100" />
 				{activeTab === "experiments" && <div className="absolute inset-0 bg-primary/5" />}
@@ -58,9 +58,9 @@ export function DashboardClient({ experiments, projectsData }: { experiments: Ex
 			<button
 				type="button"
 				onClick={() => setActiveTab("projects")}
-				className={`group/section text-left relative animate-fade-up overflow-hidden rounded-4xl border ${
+				className={`group/section relative animate-fade-up overflow-hidden rounded-4xl border text-left ${
 					activeTab === "projects" ? "border-primary/30 ring-1 ring-primary/20" : "border-base-content/5 hover:border-base-content/10"
-				} bg-base-200/50 p-6 shadow-sm backdrop-blur-xl sm:p-8 lg:col-span-6 transition-all duration-300`}
+				} bg-base-200/50 p-6 shadow-sm backdrop-blur-xl transition-all duration-300 sm:p-8 lg:col-span-6`}
 				style={{ animationDelay: "400ms" }}>
 				<div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity duration-700 group-hover/section:opacity-100" />
 				{activeTab === "projects" && <div className="absolute inset-0 bg-primary/5" />}
@@ -86,7 +86,7 @@ export function DashboardClient({ experiments, projectsData }: { experiments: Ex
 
 					<div className="flex gap-4 self-start md:self-auto">
 						<div className="flex min-w-25 flex-col items-center justify-center rounded-2xl border border-base-content/5 bg-base-100/50 p-4 backdrop-blur-sm transition-colors duration-300">
-							<span className="font-black font-display text-4xl text-primary">{projectsData ? projectsData.reservedSubdomains.length : "-"}</span>
+							<span className="font-black font-display text-4xl text-primary">{projects.length}</span>
 							<span className="mt-1 font-bold text-base-content/40 text-xs uppercase tracking-widest">Total</span>
 						</div>
 					</div>
@@ -102,7 +102,7 @@ export function DashboardClient({ experiments, projectsData }: { experiments: Ex
 				{activeTab === "experiments" && (
 					<>
 						{experiments.map((exp, i) => (
-							<div key={exp.slug} className="animate-fade-up perspective-[1000px]" style={{ animationDelay: `${600 + i * 50}ms` }}>
+							<div key={exp.slug} className="perspective-[1000px] animate-fade-up" style={{ animationDelay: `${600 + i * 50}ms` }}>
 								<Link
 									href={`/${exp.slug}`}
 									className="group relative flex h-full flex-col overflow-hidden rounded-4xl border border-base-content/5 bg-base-200/50 p-6 shadow-sm backdrop-blur-xl transition-all duration-500 ease-spring hover:-translate-y-2 hover:border-primary/20 hover:shadow-primary/10 hover:shadow-xl"
@@ -156,47 +156,43 @@ export function DashboardClient({ experiments, projectsData }: { experiments: Ex
 
 				{activeTab === "projects" && (
 					<>
-						{projectsData?.reservedSubdomains.map((subdomain, i) => {
-							const projectName = subdomain.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-							const projectUrl = `https://${subdomain}.${projectsData.domain}`;
-							return (
-								<div key={subdomain} className="animate-fade-up perspective-[1000px]" style={{ animationDelay: `${600 + i * 50}ms` }}>
-									<a
-										href={projectUrl}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="group relative flex h-full flex-col overflow-hidden rounded-4xl border border-base-content/5 bg-base-200/50 p-6 shadow-sm backdrop-blur-xl transition-all duration-500 ease-spring hover:-translate-y-2 hover:border-primary/20 hover:shadow-primary/10 hover:shadow-xl"
-										style={{ transformStyle: "preserve-3d" }}>
-										<div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+						{projects.map((project, i) => (
+							<div key={project.name} className="perspective-[1000px] animate-fade-up" style={{ animationDelay: `${600 + i * 50}ms` }}>
+								<a
+									href={project.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="group relative flex h-full flex-col overflow-hidden rounded-4xl border border-base-content/5 bg-base-200/50 p-6 shadow-sm backdrop-blur-xl transition-all duration-500 ease-spring hover:-translate-y-2 hover:border-primary/20 hover:shadow-primary/10 hover:shadow-xl"
+									style={{ transformStyle: "preserve-3d" }}>
+									<div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-										<div className="relative z-10 flex flex-1 flex-col">
-											<div className="mb-6 flex items-start justify-between">
-												<div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-base-100 text-base-content/80 shadow-sm ring-1 ring-base-content/5 transition-all duration-500 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-content group-hover:shadow-primary/30">
-													<Icon code="f0ac" type="solid" className="ico-[24] transition-transform duration-500 group-hover:rotate-12" />
-												</div>
-												<div className="flex h-8 w-8 items-center justify-center rounded-full bg-base-content/5 text-base-content/40 transition-all duration-500 group-hover:bg-base-content/10 group-hover:text-primary">
-													<Icon
-														code="f08e"
-														type="solid"
-														className="ico-3 transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-													/>
-												</div>
+									<div className="relative z-10 flex flex-1 flex-col">
+										<div className="mb-6 flex items-start justify-between">
+											<div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-base-100 text-base-content/80 shadow-sm ring-1 ring-base-content/5 transition-all duration-500 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-content group-hover:shadow-primary/30">
+												<Icon code="f0ac" type="solid" className="ico-[24] transition-transform duration-500 group-hover:rotate-12" />
 											</div>
-
-											<div className="mt-auto">
-												<h3 className="mb-2 font-bold font-display text-base-content text-xl tracking-tight transition-colors duration-300 group-hover:text-primary">
-													{projectName}
-												</h3>
-												<p className="line-clamp-2 text-base-content/60 text-sm leading-relaxed">{`${subdomain}.${projectsData.domain}`}</p>
+											<div className="flex h-8 w-8 items-center justify-center rounded-full bg-base-content/5 text-base-content/40 transition-all duration-500 group-hover:bg-base-content/10 group-hover:text-primary">
+												<Icon
+													code="f08e"
+													type="solid"
+													className="ico-3 transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+												/>
 											</div>
 										</div>
 
-										<div className="absolute bottom-0 left-0 h-1 w-0 bg-linear-to-r from-primary via-secondary to-accent opacity-80 transition-all duration-500 ease-spring group-hover:w-full" />
-									</a>
-								</div>
-							);
-						})}
-						{projectsData?.reservedSubdomains.length === 0 && (
+										<div className="mt-auto">
+											<h3 className="mb-2 font-bold font-display text-base-content text-xl tracking-tight transition-colors duration-300 group-hover:text-primary">
+												{project.name}
+											</h3>
+											<p className="line-clamp-2 text-base-content/60 text-sm leading-relaxed">{project.url.replace("https://", "")}</p>
+										</div>
+									</div>
+
+									<div className="absolute bottom-0 left-0 h-1 w-0 bg-linear-to-r from-primary via-secondary to-accent opacity-80 transition-all duration-500 ease-spring group-hover:w-full" />
+								</a>
+							</div>
+						))}
+						{projects.length === 0 && (
 							<div
 								className="col-span-full flex animate-fade-up flex-col items-center justify-center py-24 text-center"
 								style={{ animationDelay: "600ms" }}>
