@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 	alternates: { canonical: "/" },
 };
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default async function HomePage() {
 	const experiments = getExperiments();
