@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GREETINGS, VERCEL_PROJECTS_API_URL } from "#utils/constants";
 import { getExperiments } from "#utils/experiments";
 import type { ProjectApiRes } from "./dashboard-client";
 import { DashboardClient } from "./dashboard-client";
@@ -9,9 +10,7 @@ export const metadata: Metadata = {
 	alternates: { canonical: "/" },
 };
 
-export const revalidate = 86400; // 24 hours ISR
-
-const GREETINGS = ["Welcome to the lab", "Let's cook.", "Break things beautifully.", "Where ideas mutate.", "Tinker. Break. Ship.", "What's brewing?"];
+export const revalidate = 0;
 
 export default async function HomePage() {
 	const experiments = getExperiments();
@@ -20,8 +19,13 @@ export default async function HomePage() {
 
 	let projectsData: ProjectApiRes | null = null;
 	try {
-		const res = await fetch("https://portfolio.ritik.me/api/vercel/projects", { next: { revalidate: 86400 } });
-		if (res.ok) projectsData = await res.json();
+		const res = await fetch(VERCEL_PROJECTS_API_URL);
+		if (res.ok) {
+			projectsData = await res.json();
+			if (projectsData) {
+				projectsData.reservedSubdomains = projectsData.reservedSubdomains.filter((subdomain) => subdomain !== "lab");
+			}
+		}
 	} catch (error) {
 		console.error("Failed to fetch projects:", error);
 	}

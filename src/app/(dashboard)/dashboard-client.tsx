@@ -40,7 +40,7 @@ export function DashboardClient({ experiments, projectsData }: { experiments: Ex
 							</div>
 							<div>
 								<h2 className="font-bold font-display text-2xl text-base-content">Experiments</h2>
-								<p className="text-base-content/60 text-sm">Interactive lab for creative explorations.</p>
+								<p className="text-base-content/60 text-sm">Playground for my distracted weekend ideas</p>
 							</div>
 						</div>
 					</div>
@@ -79,7 +79,7 @@ export function DashboardClient({ experiments, projectsData }: { experiments: Ex
 							</div>
 							<div>
 								<h2 className="font-bold font-display text-2xl text-base-content">Projects</h2>
-								<p className="text-base-content/60 text-sm">Check out my other real-world projects.</p>
+								<p className="text-base-content/60 text-sm">The few things I actually finished and deployed</p>
 							</div>
 						</div>
 					</div>
