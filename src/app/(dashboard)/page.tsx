@@ -6,6 +6,8 @@ import { getExperiments } from "#utils/experiments";
 export const metadata: Metadata = {
 	title: "Home",
 	description: "Interactive playground for creative coding, experiments, and web innovation",
+	alternates: { canonical: "/" },
+	openGraph: { url: "/" },
 };
 
 const GREETINGS = ["Welcome to the lab", "Let's cook.", "Break things beautifully.", "Where ideas mutate.", "Tinker. Break. Ship.", "What's brewing?"];

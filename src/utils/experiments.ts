@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import type { Metadata } from "next";
 
 export type Experiment = {
 	slug: string;
@@ -33,4 +34,13 @@ export function getExperiments(): Experiment[] {
 			return defaults;
 		})
 		.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export function getExperimentMetadata(meta: { name: string; description: string }, slug: string): Metadata {
+	return {
+		title: meta.name,
+		description: meta.description,
+		alternates: { canonical: `/${slug}` },
+		openGraph: { url: `/${slug}` },
+	};
 }
